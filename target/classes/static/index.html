@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Renting de Vehículos</title>
+
+<!-- Tailwind por CDN para hacerlo rápido y sencillo -->
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen text-slate-800">
+
+	<header class="bg-indigo-600 text-white py-8 shadow-md">
+		<div class="max-w-6xl mx-auto px-4 text-center">
+			<h1 class="text-4xl font-bold">Renting de Vehículos</h1>
+			<p class="mt-2 text-indigo-100">Panel sencillo para probar la API</p>
+		</div>
+	</header>
+
+	<main
+		class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+		<!-- Crear tablas -->
+		<section class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-bold text-indigo-600 mb-4">Crear tablas</h2>
+			<button onclick="crearTablas()" class="btn">Crear tablas</button>
+		</section>
+
+		<!-- Añadir vehículo -->
+		<section class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-bold text-indigo-600 mb-4">Añadir
+				vehículo</h2>
+
+			<input id="marca" class="input" placeholder="Marca"> <input
+				id="modelo" class="input" placeholder="Modelo"> <input
+				id="matricula" class="input" placeholder="Matrícula" value="1234ABC">
+			<input id="tipo" class="input" placeholder="Tipo" value="Pequeño">
+			<input id="precio" class="input" placeholder="Precio día">
+
+			<button onclick="aniadirVehiculo()" class="btn mt-3">Añadir
+				vehículo</button>
+		</section>
+
+		<!-- Añadir cliente -->
+		<section class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-bold text-indigo-600 mb-4">Añadir
+				cliente</h2>
+
+			<input id="nombre" class="input" placeholder="Nombre"> <input
+				id="apellido" class="input" placeholder="Apellido" value="Garcia">
+			<input id="email" class="input" placeholder="Email"
+				value="ana@gmail.com"> <input id="telefono" class="input"
+				placeholder="Teléfono"> <input id="dni" class="input"
+				placeholder="DNI">
+
+			<button onclick="aniadirCliente()" class="btn mt-3">Añadir
+				cliente</button>
+		</section>
+
+		<!-- Crear alquiler -->
+		<section class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-bold text-indigo-600 mb-4">Crear
+				alquiler</h2>
+
+			<input id="idCliente" class="input" placeholder="ID Cliente"
+				value="1"> <input id="idVehiculo" class="input"
+				placeholder="ID Vehículo" value="1"> <input id="fechaInicio"
+				class="input" placeholder="Fecha inicio" value="2026-05-01">
+			<input id="fechaDevolucion" class="input"
+				placeholder="Fecha devolución" value="2026-05-05">
+
+			<button onclick="crearAlquiler()" class="btn mt-3">Crear
+				alquiler</button>
+		</section>
+
+		<!-- Devolver vehículo -->
+		<section class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-bold text-indigo-600 mb-4">Devolver
+				vehículo</h2>
+
+			<input id="idAlquiler" class="input" placeholder="ID Alquiler"
+				value="1"> <input id="costeTotal" class="input"
+				placeholder="Coste total" value="200">
+
+			<button onclick="devolverVehiculo()" class="btn mt-3">
+				Devolver vehículo</button>
+		</section>
+
+		<!-- Consultas -->
+		<section class="bg-white rounded-2xl shadow p-6">
+			<h2 class="text-xl font-bold text-indigo-600 mb-4">Consultas</h2>
+
+			<div class="flex flex-wrap gap-3">
+				<button onclick="listarVehiculos()" class="btn">Vehículos</button>
+				<button onclick="listarDisponibles()" class="btn">Disponibles</button>
+				<button onclick="listarClientes()" class="btn">Clientes</button>
+				<button onclick="listarAlquileres()" class="btn">Alquileres</button>
+				<button onclick="listarActivos()" class="btn">Activos</button>
+			</div>
+		</section>
+
+		<!-- Resultado -->
+		<section class="bg-white rounded-2xl shadow p-6 md:col-span-2">
+			<h2 class="text-xl font-bold text-indigo-600 mb-4">Resultado</h2>
+			<pre id="resultado"
+				class="bg-slate-900 text-green-300 p-4 rounded-xl overflow-x-auto min-h-40 text-sm">Aquí aparecerán los datos...</pre>
+		</section>
+
+	</main>
+
+	<script>
+		// Para no repetir tantas clases de Tailwind en los inputs y botones
+		document.querySelectorAll(".input").forEach(input => {
+			input.className = "w-full border border-slate-300 rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-400";
+		});
+
+		document.querySelectorAll(".btn").forEach(btn => {
+			btn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow transition";
+		});
+
+		const URL_BASE = "http://localhost:8080";
+
+		function mostrar(datos) {
+			const caja = document.getElementById("resultado");
+
+			if (typeof datos === "string") {
+				caja.textContent = datos;
+			} else {
+				caja.textContent = JSON.stringify(datos, null, 2);
+			}
+		}
+
+		function pedir(url) {
+			fetch(url)
+				.then(respuesta => {
+					return respuesta.text();
+				})
+				.then(texto => {
+					try {
+						mostrar(JSON.parse(texto));
+					} catch (e) {
+						mostrar(texto);
+					}
+				})
+				.catch(error => mostrar("Error: " + error));
+		}
+
+		function crearTablas() {
+			pedir(URL_BASE + "/crear");
+		}
+
+		function aniadirVehiculo() {
+			const marca = document.getElementById("marca").value;
+			const modelo = document.getElementById("modelo").value;
+			const matricula = document.getElementById("matricula").value;
+			const tipo = document.getElementById("tipo").value;
+			const precio = document.getElementById("precio").value;
+
+			const url = URL_BASE + "/vehiculos/aniadir"
+				+ "?marca=" + encodeURIComponent(marca)
+				+ "&modelo=" + encodeURIComponent(modelo)
+				+ "&matricula=" + encodeURIComponent(matricula)
+				+ "&tipo=" + encodeURIComponent(tipo)
+				+ "&precio=" + encodeURIComponent(precio);
+
+			pedir(url);
+		}
+
+		function aniadirCliente() {
+			const nombre = document.getElementById("nombre").value;
+			const apellido = document.getElementById("apellido").value;
+			const email = document.getElementById("email").value;
+			const telefono = document.getElementById("telefono").value;
+			const dni = document.getElementById("dni").value;
+
+			const url = URL_BASE + "/clientes/anhadir"
+				+ "?nombre=" + encodeURIComponent(nombre)
+				+ "&apellido=" + encodeURIComponent(apellido)
+				+ "&email=" + encodeURIComponent(email)
+				+ "&telefono=" + encodeURIComponent(telefono)
+				+ "&DNI=" + encodeURIComponent(dni);
+
+			pedir(url);
+		}
+
+		function crearAlquiler() {
+			const idCliente = document.getElementById("idCliente").value;
+			const idVehiculo = document.getElementById("idVehiculo").value;
+			const fechaInicio = document.getElementById("fechaInicio").value;
+			const fechaDevolucion = document.getElementById("fechaDevolucion").value;
+
+			const url = URL_BASE + "/alquileres/crear"
+				+ "?idCliente=" + encodeURIComponent(idCliente)
+				+ "&idVehiculo=" + encodeURIComponent(idVehiculo)
+				+ "&fechaInicio=" + encodeURIComponent(fechaInicio)
+				+ "&fechaDevolucion=" + encodeURIComponent(fechaDevolucion);
+
+			pedir(url);
+		}
+
+		function devolverVehiculo() {
+			const idAlquiler = document.getElementById("idAlquiler").value;
+			const costeTotal = document.getElementById("costeTotal").value;
+
+			const url = URL_BASE + "/alquileres/devolver/" + encodeURIComponent(idAlquiler)
+				+ "?costeTotal=" + encodeURIComponent(costeTotal);
+
+			pedir(url);
+		}
+
+		function listarVehiculos() {
+			pedir(URL_BASE + "/vehiculos");
+		}
+
+		function listarDisponibles() {
+			pedir(URL_BASE + "/vehiculos/disponibles");
+		}
+
+		function listarClientes() {
+			pedir(URL_BASE + "/clientes");
+		}
+
+		function listarAlquileres() {
+			pedir(URL_BASE + "/alquileres");
+		}
+
+		function listarActivos() {
+			pedir(URL_BASE + "/alquileres/activos");
+		}
+	</script>
+
+</body>
+</html>
