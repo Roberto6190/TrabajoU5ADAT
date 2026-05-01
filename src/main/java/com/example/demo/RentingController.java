@@ -89,4 +89,32 @@ public class RentingController {
 		int filas = jdbcTemplate.update("DELETE FROM vehiculos WHERE idVehiculo = ?", id);
 		return filas > 0 ? "Vehículo eliminado" : "Vehículo no encontrado";
 	}
+	
+	//Añadir cliente.
+	@GetMapping("/clientes/anhadir")
+	public int insertarCliente(@RequestParam(value = "nombre") String nombre,
+			@RequestParam(value = "apellido") String apellido, @RequestParam(value = "email") String email,
+			@RequestParam(value = "telefono") String telefono, @RequestParam(value = "DNI") String dni) {
+
+		return jdbcTemplate.update("INSERT INTO cliente (nombre, apellido, email, telefono, DNI) VALUES (?,?,?,?)",
+				nombre, apellido, email, telefono, dni);
+	}
+
+	//Listar clientes.
+	@GetMapping("/listar")
+	public List<Cliente> listar() {
+		return jdbcTemplate.query("select * from clientes", new RowMapperCliente());
+	}
+
+	//Borrar cliente.
+	@GetMapping("/clientes/delete/{id}")
+	public String deleteCliente(@PathVariable long id) {
+		List<AlquilerVehiculo> activos = jdbcTemplate
+				.query("SELECT * FROM alquileres WHERE idCliente = ? AND estado = TRUE", new RowMapperRentig(), id);
+		if (!activos.isEmpty()) {
+			return "No se puede eliminar: el cliente tiene un alquiler activo";
+		}
+		int filas = jdbcTemplate.update("DELETE FROM clientes WHERE idCliente = ?", id);
+		return filas > 0 ? "Cliente eliminado" : "Cliente no encontrado";
+	}
 }
