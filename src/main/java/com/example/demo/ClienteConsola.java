@@ -68,8 +68,8 @@ public class ClienteConsola {
 	private static void menuVehiculos() {
 
 		int opcion = 0;
-		String regexTipos = "^(pequeño|mediano|grande|todo-terreno|lujo|mono-volumen|furgoneta)$";
-
+		String regexTipos = "^(Pequeño|Mediano|Grande|Todo-terreno|Lujo|Mono-volumen|Furgoneta)$";
+		
 		System.out.println("==== MENU VEHICULOS ====");
 		System.out.println("1. Listar todos los vehiculos.");
 		System.out.println("2. Listar vehiculos disponibles.");
@@ -108,8 +108,8 @@ public class ClienteConsola {
 
 			String tipo;
 			do {
-				System.out.print("Tipo (pequeño/mediano/grande/todo-terreno/lujo/mono-volumen/furgoneta): ");
-				tipo = in.nextLine().trim().toLowerCase();
+				System.out.print("Tipo (Pequeño/Mediano/Grande/Todo-terreno/Lujo/Mono-volumen/Furgoneta): ");
+				tipo = in.nextLine().trim();
 				if (tipo.isEmpty()) {
 					System.err.println("ERROR: NO PUEDE ESTAR VACIO.");
 				} else if (!tipo.matches(regexTipos)) {
