@@ -9,5 +9,4 @@ public class TrabajoU52Application {
 	public static void main(String[] args) {
 		SpringApplication.run(TrabajoU52Application.class, args);
 	}
-
 }

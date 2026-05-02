@@ -4,225 +4,291 @@
 <meta charset="UTF-8">
 <title>Renting de Vehículos</title>
 
-<!-- Tailwind por CDN para hacerlo rápido y sencillo -->
+<!-- Tailwind por CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-100 min-h-screen text-slate-800">
 
 	<header class="bg-indigo-600 text-white py-8 shadow-md">
-		<div class="max-w-6xl mx-auto px-4 text-center">
+		<div class="max-w-5xl mx-auto px-4 text-center">
 			<h1 class="text-4xl font-bold">Renting de Vehículos</h1>
-			<p class="mt-2 text-indigo-100">Panel sencillo para probar la API</p>
+			<p class="mt-2 text-indigo-100">Portal del cliente</p>
 		</div>
 	</header>
 
-	<main
-		class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+	<main class="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 
 		<!-- Crear tablas -->
-		<section class="bg-white rounded-2xl shadow p-6">
-			<h2 class="text-xl font-bold text-indigo-600 mb-4">Crear tablas</h2>
-			<button onclick="crearTablas()" class="btn">Crear tablas</button>
+		<section class="bg-white rounded-2xl shadow p-4 flex flex-col md:col-span-2">
+			<h2 class="text-xl font-bold text-indigo-600 mb-3 text-center">Crear tablas</h2>
+			<p class="text-slate-500 text-sm text-center mb-3">Ejecuta esto una sola vez para inicializar la base de datos.</p>
+			<button onclick="crearTablas()" class="btn mb-4">Crear tablas</button>
+			<pre id="resultado-tablas" style="display:none" class="mt-4 bg-slate-900 text-green-300 p-3 rounded-xl text-sm whitespace-pre-wrap"></pre>
 		</section>
 
-		<!-- Añadir vehículo -->
-		<section class="bg-white rounded-2xl shadow p-6">
-			<h2 class="text-xl font-bold text-indigo-600 mb-4">Añadir
-				vehículo</h2>
+		<!-- Registrarse como cliente -->
+		<section class="bg-white rounded-2xl shadow p-6 flex flex-col justify-between">
+			<div>
+				<h2 class="text-xl font-bold text-indigo-600 mb-4 text-center">Registrarme</h2>
 
-			<input id="marca" class="input" placeholder="Marca"> <input
-				id="modelo" class="input" placeholder="Modelo"> <input
-				id="matricula" class="input" placeholder="Matrícula"> <input
-				id="tipo" class="input" placeholder="Tipo"> <input
-				id="precio" class="input" placeholder="Precio día">
+				<input id="nombre"    class="input" placeholder="Nombre">
+				<input id="apellido"  class="input" placeholder="Apellido">
+				<input id="email"     class="input" placeholder="Email">
+				<input id="telefono"  class="input" placeholder="Teléfono (9 dígitos)">
+				<input id="dni"       class="input" placeholder="DNI (8 números + letra)">
+			</div>
 
-			<button onclick="aniadirVehiculo()" class="btn mt-3">Añadir
-				vehículo</button>
-		</section>
-
-		<!-- Añadir cliente -->
-		<section class="bg-white rounded-2xl shadow p-6">
-			<h2 class="text-xl font-bold text-indigo-600 mb-4">Añadir
-				cliente</h2>
-
-			<input id="nombre" class="input" placeholder="Nombre"> <input
-				id="apellido" class="input" placeholder="Apellido"> <input
-				id="email" class="input" placeholder="Email"> <input
-				id="telefono" class="input" placeholder="Teléfono"> <input
-				id="dni" class="input" placeholder="DNI">
-
-			<button onclick="aniadirCliente()" class="btn mt-3">Añadir
-				cliente</button>
-		</section>
-
-		<!-- Crear alquiler -->
-		<section class="bg-white rounded-2xl shadow p-6">
-			<h2 class="text-xl font-bold text-indigo-600 mb-4">Crear
-				alquiler</h2>
-
-			<input id="idCliente" class="input" placeholder="ID Cliente">
-			<input id="idVehiculo" class="input" placeholder="ID Vehículo">
-			<input id="fechaInicio" class="input" placeholder="Fecha inicio">
-			<input id="fechaDevolucion" class="input"
-				placeholder="Fecha devolución">
-
-			<button onclick="crearAlquiler()" class="btn mt-3">Crear
-				alquiler</button>
-		</section>
-
-		<!-- Devolver vehículo -->
-		<section class="bg-white rounded-2xl shadow p-6">
-			<h2 class="text-xl font-bold text-indigo-600 mb-4">Devolver
-				vehículo</h2>
-
-			<input id="idAlquiler" class="input" placeholder="ID Alquiler">
-			<input id="costeTotal" class="input" placeholder="Coste total">
-
-			<button onclick="devolverVehiculo()" class="btn mt-3">
-				Devolver vehículo</button>
-		</section>
-
-		<!-- Consultas -->
-		<section class="bg-white rounded-2xl shadow p-6">
-			<h2 class="text-xl font-bold text-indigo-600 mb-4">Consultas</h2>
-
-			<div class="flex flex-wrap gap-3">
-				<button onclick="listarVehiculos()" class="btn">Vehículos</button>
-				<button onclick="listarDisponibles()" class="btn">Disponibles</button>
-				<button onclick="listarClientes()" class="btn">Clientes</button>
-				<button onclick="listarAlquileres()" class="btn">Alquileres</button>
-				<button onclick="listarActivos()" class="btn">Activos</button>
+			<div>
+				<button onclick="registrarCliente()" class="btn mb-4">Registrarme</button>
+				<pre id="resultado-registro" style="display:none" class="bg-slate-900 text-green-300 p-3 rounded-xl text-sm whitespace-pre-wrap"></pre>
 			</div>
 		</section>
 
-		<!-- Resultado -->
-		<section class="bg-white rounded-2xl shadow p-6 md:col-span-2">
-			<h2 class="text-xl font-bold text-indigo-600 mb-4">Resultado</h2>
-			<pre id="resultado"
-				class="bg-slate-900 text-green-300 p-4 rounded-xl overflow-x-auto min-h-40 text-sm">Aquí aparecerán los datos...</pre>
+		<!-- Crear alquiler -->
+		<section class="bg-white rounded-2xl shadow p-6 flex flex-col justify-between">
+			<div>
+				<h2 class="text-xl font-bold text-indigo-600 mb-4 text-center">Alquilar vehículo</h2>
+
+				<input id="dniCliente"      class="input" placeholder="Tu DNI">
+				<input id="idVehiculo"      class="input" placeholder="ID Vehículo">
+				<input id="fechaInicio"     class="input" placeholder="Fecha inicio (YYYY-MM-DD)" type="date">
+				<input id="fechaDevolucion" class="input" placeholder="Fecha devolución (YYYY-MM-DD)" type="date">
+			</div>
+
+			<div>
+				<button onclick="crearAlquiler()" class="btn mb-4">Crear alquiler</button>
+				<pre id="resultado-alquiler" style="display:none" class="bg-slate-900 text-green-300 p-3 rounded-xl text-sm whitespace-pre-wrap"></pre>
+			</div>
+		</section>
+
+		<!-- Ver vehículos disponibles -->
+		<section class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+			<div>
+				<h2 class="text-xl font-bold text-indigo-600 mb-3 text-center">Vehículos disponibles</h2>
+			</div>
+			<div>
+				<button onclick="listarDisponibles()" class="btn mb-4">Ver vehículos disponibles</button>
+				<div id="resultado-vehiculos" style="display:none" class="text-sm text-center"></div>
+			</div>
+		</section>
+
+		<!-- Mis alquileres -->
+		<section class="bg-white rounded-2xl shadow p-4 flex flex-col justify-between">
+			<div>
+				<h2 class="text-xl font-bold text-indigo-600 mb-3 text-center">Mis alquileres</h2>
+				<input id="dniClienteAlquileres" class="input" placeholder="Introduce tu DNI">
+			</div>
+			<div>
+				<button onclick="verMisAlquileres()" class="btn mb-4">Ver mis alquileres</button>
+				<div id="resultado-misalquileres" style="display:none" class="text-sm text-center"></div>
+			</div>
 		</section>
 
 	</main>
 
 	<script>
-		// Para no repetir tantas clases de Tailwind en los inputs y botones
 		document.querySelectorAll(".input").forEach(input => {
 			input.className = "w-full border border-slate-300 rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-400";
 		});
 
 		document.querySelectorAll(".btn").forEach(btn => {
-			btn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow transition";
+			btn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow transition block mx-auto mt-4 mb-4";
 		});
 
 		const URL_BASE = "http://localhost:8080";
 
-		function mostrar(datos) {
-			const caja = document.getElementById("resultado");
-
-			if (typeof datos === "string") {
-				caja.textContent = datos;
-			} else {
-				caja.textContent = JSON.stringify(datos, null, 2);
-			}
+		// Muestra un texto simple (respuesta del servidor) en el <pre>
+		function mostrarTexto(idDiv, texto) {
+			const caja = document.getElementById(idDiv);
+			caja.style.display = "block";
+			caja.textContent = texto;
 		}
 
-		function pedir(url) {
+		// Muestra una lista de vehículos como tarjetas
+		// Los campos vienen del Vehiculo.java: idVehiculo, marca, modelo, matricula, tipoVehiculo, precio_dia, disponible
+		function mostrarVehiculos(vehiculos) {
+			const caja = document.getElementById("resultado-vehiculos");
+			caja.style.display = "block";
+			caja.innerHTML = "";
+
+			if (vehiculos.length === 0) {
+				caja.textContent = "No hay vehículos disponibles.";
+				return;
+			}
+
+			vehiculos.forEach(v => {
+				const div = document.createElement("div");
+				div.className = "border border-slate-200 rounded-xl p-3 mb-2 bg-slate-50";
+				div.innerHTML = "<strong>" + v.marca + " " + v.modelo + "</strong>"
+					+ " &nbsp;|&nbsp; Matrícula: " + v.matricula
+					+ " &nbsp;|&nbsp; Tipo: " + v.tipoVehiculo
+					+ " &nbsp;|&nbsp; " + v.precio_dia + " €/día"
+					+ " &nbsp;|&nbsp; ID: " + v.idVehiculo;
+				caja.appendChild(div);
+			});
+		}
+
+		// Muestra una lista de alquileres como filas
+		// Los campos vienen del AlquilerVehiculo.java: idAlquiler, idVehiculo, idCliente, fechaInicio, fechaDevolucion, estado, costeTotal
+		function mostrarAlquileres(alquileres) {
+			const caja = document.getElementById("resultado-misalquileres");
+			caja.style.display = "block";
+			caja.innerHTML = "";
+
+			if (alquileres.length === 0) {
+				caja.textContent = "No tienes alquileres registrados.";
+				return;
+			}
+
+			alquileres.forEach(a => {
+				const div = document.createElement("div");
+				div.className = "border border-slate-200 rounded-xl p-3 mb-2 bg-slate-50";
+
+				const estadoTexto = a.estado ? "Activo" : "Cerrado";
+				const costeTexto  = a.costeTotal > 0 ? a.costeTotal + " €" : "—";
+
+				div.innerHTML = "Alquiler #" + a.idAlquiler
+					+ " &nbsp;|&nbsp; Vehículo ID: " + a.idVehiculo
+					+ " &nbsp;|&nbsp; " + a.fechaInicio + " → " + a.fechaDevolucion
+					+ " &nbsp;|&nbsp; Estado: " + estadoTexto
+					+ " &nbsp;|&nbsp; Coste: " + costeTexto;
+				caja.appendChild(div);
+			});
+		}
+
+		// Función auxiliar fetch — patrón .then().catch() de U6
+		function pedir(url, callback) {
 			fetch(url)
-				.then(respuesta => {
-					return respuesta.text();
-				})
+				.then(respuesta => respuesta.text())
 				.then(texto => {
 					try {
-						mostrar(JSON.parse(texto));
+						callback(JSON.parse(texto));
 					} catch (e) {
-						mostrar(texto);
+						callback(texto);
 					}
 				})
-				.catch(error => mostrar("Error: " + error));
+				.catch(error => callback("Error de conexión: " + error));
 		}
 
+		// Crear tablas
 		function crearTablas() {
-			pedir(URL_BASE + "/crear");
+			pedir(URL_BASE + "/crear", function(datos) {
+				mostrarTexto("resultado-tablas", datos);
+			});
 		}
 
-		function aniadirVehiculo() {
-			const marca = document.getElementById("marca").value;
-			const modelo = document.getElementById("modelo").value;
-			const matricula = document.getElementById("matricula").value;
-			const tipo = document.getElementById("tipo").value;
-			const precio = document.getElementById("precio").value;
-
-			const url = URL_BASE + "/vehiculos/aniadir"
-				+ "?marca=" + encodeURIComponent(marca)
-				+ "&modelo=" + encodeURIComponent(modelo)
-				+ "&matricula=" + encodeURIComponent(matricula)
-				+ "&tipo=" + encodeURIComponent(tipo)
-				+ "&precio=" + encodeURIComponent(precio);
-
-			pedir(url);
+		// Ver vehículos disponibles
+		function listarDisponibles() {
+			pedir(URL_BASE + "/vehiculos/disponibles", function(datos) {
+				if (Array.isArray(datos)) {
+					mostrarVehiculos(datos);
+				} else {
+					mostrarTexto("resultado-vehiculos", datos);
+				}
+			});
 		}
 
-		function aniadirCliente() {
-			const nombre = document.getElementById("nombre").value;
+		// Registrar cliente
+		function registrarCliente() {
+			const nombre   = document.getElementById("nombre").value;
 			const apellido = document.getElementById("apellido").value;
-			const email = document.getElementById("email").value;
+			const email    = document.getElementById("email").value;
 			const telefono = document.getElementById("telefono").value;
-			const dni = document.getElementById("dni").value;
+			const dni      = document.getElementById("dni").value.trim().toUpperCase();
+
+			// Validaciones antes de llamar al servidor — igual que en ClienteConsola.java
+			const regexEmail    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			const regexTelefono = /^[0-9]{9}$/;
+			const regexDNI      = /^[0-9]{8}[A-Z]$/;
+
+			if (!nombre || !apellido || !email || !telefono || !dni) {
+				mostrarTexto("resultado-registro", "Error: todos los campos son obligatorios.");
+				return;
+			}
+			if (!regexEmail.test(email)) {
+				mostrarTexto("resultado-registro", "Error: formato de email no válido. (Ej: nombre@dominio.com)");
+				return;
+			}
+			if (!regexTelefono.test(telefono)) {
+				mostrarTexto("resultado-registro", "Error: el teléfono debe tener 9 dígitos.");
+				return;
+			}
+			if (!regexDNI.test(dni)) {
+				mostrarTexto("resultado-registro", "Error: el DNI debe tener 8 números seguidos de una letra. (Ej: 12345678A)");
+				return;
+			}
 
 			const url = URL_BASE + "/clientes/anhadir"
-				+ "?nombre=" + encodeURIComponent(nombre)
+				+ "?nombre="   + encodeURIComponent(nombre)
 				+ "&apellido=" + encodeURIComponent(apellido)
-				+ "&email=" + encodeURIComponent(email)
+				+ "&email="    + encodeURIComponent(email)
 				+ "&telefono=" + encodeURIComponent(telefono)
-				+ "&DNI=" + encodeURIComponent(dni);
+				+ "&DNI="      + encodeURIComponent(dni);
 
-			pedir(url);
+			pedir(url, function(datos) {
+				if (typeof datos === "string" && datos.includes("añadido")) {
+					// Buscamos el cliente por DNI usando el nuevo endpoint /clientes/dni/{dni}
+					pedir(URL_BASE + "/clientes/dni/" + encodeURIComponent(dni), function(cliente) {
+						if (cliente && cliente.id) {
+							mostrarTexto("resultado-registro", "Cliente añadido correctamente. Ya puedes usar tu DNI para alquilar.");
+						} else {
+							mostrarTexto("resultado-registro", "Cliente añadido.");
+						}
+					});
+				} else {
+					mostrarTexto("resultado-registro", typeof datos === "string" ? datos : JSON.stringify(datos));
+				}
+			});
 		}
 
+		// Crear alquiler
+		// Primero buscamos el ID del cliente por DNI, luego creamos el alquiler
 		function crearAlquiler() {
-			const idCliente = document.getElementById("idCliente").value;
-			const idVehiculo = document.getElementById("idVehiculo").value;
-			const fechaInicio = document.getElementById("fechaInicio").value;
+			const dniCliente      = document.getElementById("dniCliente").value;
+			const idVehiculo      = document.getElementById("idVehiculo").value;
+			const fechaInicio     = document.getElementById("fechaInicio").value;
 			const fechaDevolucion = document.getElementById("fechaDevolucion").value;
 
-			const url = URL_BASE + "/alquileres/crear"
-				+ "?idCliente=" + encodeURIComponent(idCliente)
-				+ "&idVehiculo=" + encodeURIComponent(idVehiculo)
-				+ "&fechaInicio=" + encodeURIComponent(fechaInicio)
-				+ "&fechaDevolucion=" + encodeURIComponent(fechaDevolucion);
+			// 1. Buscamos el cliente por DNI para obtener su ID numérico
+			pedir(URL_BASE + "/clientes/dni/" + encodeURIComponent(dniCliente), function(cliente) {
+				if (!cliente || !cliente.id) {
+					mostrarTexto("resultado-alquiler", "No existe el cliente con ese DNI.");
+					return;
+				}
 
-			pedir(url);
+				// 2. Con el ID ya podemos crear el alquiler
+				const url = URL_BASE + "/alquileres/crear"
+					+ "?idCliente="       + encodeURIComponent(cliente.id)
+					+ "&idVehiculo="      + encodeURIComponent(idVehiculo)
+					+ "&fechaInicio="     + encodeURIComponent(fechaInicio)
+					+ "&fechaDevolucion=" + encodeURIComponent(fechaDevolucion);
+
+				pedir(url, function(datos) {
+					mostrarTexto("resultado-alquiler", datos);
+				});
+			});
 		}
 
-		function devolverVehiculo() {
-			const idAlquiler = document.getElementById("idAlquiler").value;
-			const costeTotal = document.getElementById("costeTotal").value;
+		// Ver mis alquileres
+		// Buscamos el ID del cliente por DNI y luego pedimos sus alquileres
+		function verMisAlquileres() {
+			const dni = document.getElementById("dniClienteAlquileres").value;
 
-			const url = URL_BASE + "/alquileres/devolver/" + encodeURIComponent(idAlquiler)
-				+ "?costeTotal=" + encodeURIComponent(costeTotal);
+			pedir(URL_BASE + "/clientes/dni/" + encodeURIComponent(dni), function(cliente) {
+				if (!cliente || !cliente.id) {
+					mostrarTexto("resultado-misalquileres", "No existe el cliente con ese DNI.");
+					return;
+				}
 
-			pedir(url);
-		}
-
-		function listarVehiculos() {
-			pedir(URL_BASE + "/vehiculos");
-		}
-
-		function listarDisponibles() {
-			pedir(URL_BASE + "/vehiculos/disponibles");
-		}
-
-		function listarClientes() {
-			pedir(URL_BASE + "/clientes");
-		}
-
-		function listarAlquileres() {
-			pedir(URL_BASE + "/alquileres");
-		}
-
-		function listarActivos() {
-			pedir(URL_BASE + "/alquileres/activos");
+				pedir(URL_BASE + "/clientes/" + cliente.id + "/alquileres", function(datos) {
+					if (Array.isArray(datos)) {
+						mostrarAlquileres(datos);
+					} else {
+						mostrarTexto("resultado-misalquileres", datos);
+					}
+				});
+			});
 		}
 	</script>
 
