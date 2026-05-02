@@ -28,29 +28,40 @@ public class RentingController {
 	public String crearTablas() {
 
 		// Tabla de vehiculos.
-		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS vehiculos (" + "idVehiculo INT AUTO_INCREMENT PRIMARY KEY,"
-				+ "marca VARCHAR(255) NOT NULL," + "modelo VARCHAR(255) NOT NULL," + "matricula VARCHAR(7),"
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS vehiculos ("
+				+ "idVehiculo INT AUTO_INCREMENT PRIMARY KEY,"
+				+ "marca VARCHAR(255) NOT NULL,"
+				+ "modelo VARCHAR(255) NOT NULL,"
+				+ "matricula VARCHAR(7),"
 				+ "tipoVehiculo ENUM('Pequeño', 'Mediano', 'Grande', 'Todo-terreno', 'Lujo', 'Mono-volumen', 'Furgoneta'),"
-				+ "precioDia DECIMAL(7,2) NOT NULL," + "disponible BOOLEAN DEFAULT TRUE)");
+				+ "precioDia DECIMAL(7,2) NOT NULL,"
+				+ "disponible BOOLEAN DEFAULT TRUE)");
 
 		// Tabla clientes.
-		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clientes (" + "idCliente INT AUTO_INCREMENT PRIMARY KEY,"
-				+ "nombre VARCHAR(50)," + "apellido VARCHAR(50)," + "email VARCHAR(50) UNIQUE NOT NULL,"
-				+ "telefono VARCHAR(9) UNIQUE NOT NULL," + "DNI VARCHAR(9) UNIQUE NOT NULL)");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clientes ("
+				+ "idCliente INT AUTO_INCREMENT PRIMARY KEY,"
+				+ "nombre VARCHAR(50),"
+				+ "apellido VARCHAR(50),"
+				+ "email VARCHAR(50) UNIQUE NOT NULL,"
+				+ "telefono VARCHAR(9) UNIQUE NOT NULL,"
+				+ "DNI VARCHAR(9) UNIQUE NOT NULL)");
 
 		// Tabla alquileres.
-		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS alquileres (" + "idAlquiler INT AUTO_INCREMENT PRIMARY KEY,"
-				+ "idCliente INT NOT NULL," + "idVehiculo INT NOT NULL," + "fechaInicio VARCHAR(10) NOT NULL,"
-				+ "fechaDevolucion VARCHAR(10) NOT NULL," + "estado BOOLEAN DEFAULT TRUE," + "costeTotal DOUBLE,"
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS alquileres ("
+				+ "idAlquiler INT AUTO_INCREMENT PRIMARY KEY,"
+				+ "idCliente INT NOT NULL,"
+				+ "idVehiculo INT NOT NULL,"
+				+ "fechaInicio VARCHAR(10) NOT NULL,"
+				+ "fechaDevolucion VARCHAR(10) NOT NULL,"
+				+ "estado BOOLEAN DEFAULT TRUE,"
+				+ "costeTotal DOUBLE,"
 				+ "FOREIGN KEY (idCliente) REFERENCES clientes(idCliente),"
 				+ "FOREIGN KEY (idVehiculo) REFERENCES vehiculos(idVehiculo))");
 
 		return "TABLAS CREADAS";
 	}
 
-	// -------------------------
 	// VEHICULOS
-	// -------------------------
 
 	// Listar todos los vehiculos.
 	@GetMapping("/vehiculos")
@@ -67,10 +78,8 @@ public class RentingController {
 	// Buscar vehiculo por ID.
 	@GetMapping("/vehiculos/{id}")
 	public Vehiculo buscarVehiculo(@PathVariable long id) {
-
 		List<Vehiculo> lista = jdbcTemplate.query("SELECT * FROM vehiculos WHERE idVehiculo = ?",
 				new RowMapperVehiculo(), id);
-
 		return lista.isEmpty() ? null : lista.get(0);
 	}
 
@@ -78,45 +87,25 @@ public class RentingController {
 	@GetMapping("/vehiculos/aniadir")
 	public String aniadirVehiculo(@RequestParam String marca, @RequestParam String modelo,
 			@RequestParam String matricula, @RequestParam String tipo, @RequestParam double precio) {
-
 		int filas = jdbcTemplate.update(
 				"INSERT INTO vehiculos (marca, modelo, matricula, tipoVehiculo, precioDia, disponible) VALUES (?,?,?,?,?,TRUE)",
 				marca, modelo, matricula, tipo, precio);
-
 		return filas > 0 ? "Vehiculo añadido" : "Error al añadir el vehiculo";
 	}
 
 	// Borrar vehiculo.
 	@GetMapping("/vehiculos/delete/{id}")
 	public String deleteVehiculo(@PathVariable long id) {
-
-		List<AlquilerVehiculo> activos = jdbcTemplate
-				.query("SELECT * FROM alquileres WHERE idVehiculo = ? AND estado = TRUE", new RowMapperRentig(), id);
-
+		List<AlquilerVehiculo> activos = jdbcTemplate.query(
+				"SELECT * FROM alquileres WHERE idVehiculo = ? AND estado = TRUE", new RowMapperRentig(), id);
 		if (!activos.isEmpty()) {
 			return "No se puede eliminar: el vehiculo tiene un alquiler activo";
 		}
-
 		int filas = jdbcTemplate.update("DELETE FROM vehiculos WHERE idVehiculo = ?", id);
-
 		return filas > 0 ? "Vehiculo eliminado" : "Vehiculo no encontrado";
 	}
 
-	// -------------------------
 	// CLIENTES
-	// -------------------------
-
-	// Añadir cliente.
-	@GetMapping("/clientes/anhadir")
-	public String insertarCliente(@RequestParam String nombre, @RequestParam String apellido,
-			@RequestParam String email, @RequestParam String telefono, @RequestParam String DNI) {
-
-		int filas = jdbcTemplate.update(
-				"INSERT INTO clientes (nombre, apellido, email, telefono, DNI) VALUES (?,?,?,?,?)", nombre, apellido,
-				email, telefono, DNI);
-
-		return filas > 0 ? "Cliente añadido" : "Error al añadir cliente";
-	}
 
 	// Listar clientes.
 	@GetMapping("/clientes")
@@ -127,32 +116,42 @@ public class RentingController {
 	// Buscar cliente por ID.
 	@GetMapping("/clientes/{id}")
 	public Cliente buscarCliente(@PathVariable long id) {
-
-		List<Cliente> lista = jdbcTemplate.query("SELECT * FROM clientes WHERE idCliente = ?", new RowMapperCliente(),
-				id);
-
+		List<Cliente> lista = jdbcTemplate.query("SELECT * FROM clientes WHERE idCliente = ?",
+				new RowMapperCliente(), id);
 		return lista.isEmpty() ? null : lista.get(0);
+	}
+
+	// Buscar cliente por DNI — usado por la web para que el usuario se identifique.
+	@GetMapping("/clientes/dni/{dni}")
+	public Cliente buscarClientePorDni(@PathVariable String dni) {
+		List<Cliente> lista = jdbcTemplate.query("SELECT * FROM clientes WHERE DNI = ?",
+				new RowMapperCliente(), dni);
+		return lista.isEmpty() ? null : lista.get(0);
+	}
+
+	// Añadir cliente.
+	@GetMapping("/clientes/anhadir")
+	public String insertarCliente(@RequestParam String nombre, @RequestParam String apellido,
+			@RequestParam String email, @RequestParam String telefono, @RequestParam String DNI) {
+		int filas = jdbcTemplate.update(
+				"INSERT INTO clientes (nombre, apellido, email, telefono, DNI) VALUES (?,?,?,?,?)",
+				nombre, apellido, email, telefono, DNI);
+		return filas > 0 ? "Cliente añadido" : "Error al añadir cliente";
 	}
 
 	// Borrar cliente.
 	@GetMapping("/clientes/delete/{id}")
 	public String deleteCliente(@PathVariable long id) {
-
-		List<AlquilerVehiculo> activos = jdbcTemplate
-				.query("SELECT * FROM alquileres WHERE idCliente = ? AND estado = TRUE", new RowMapperRentig(), id);
-
+		List<AlquilerVehiculo> activos = jdbcTemplate.query(
+				"SELECT * FROM alquileres WHERE idCliente = ? AND estado = TRUE", new RowMapperRentig(), id);
 		if (!activos.isEmpty()) {
 			return "No se puede eliminar: el cliente tiene un alquiler activo";
 		}
-
 		int filas = jdbcTemplate.update("DELETE FROM clientes WHERE idCliente = ?", id);
-
 		return filas > 0 ? "Cliente eliminado" : "Cliente no encontrado";
 	}
 
-	// -------------------------
 	// ALQUILERES
-	// -------------------------
 
 	// Listar todos los alquileres.
 	@GetMapping("/alquileres")
@@ -169,10 +168,8 @@ public class RentingController {
 	// Buscar alquiler por ID.
 	@GetMapping("/alquileres/{id}")
 	public AlquilerVehiculo buscarAlquiler(@PathVariable long id) {
-
 		List<AlquilerVehiculo> lista = jdbcTemplate.query("SELECT * FROM alquileres WHERE idAlquiler = ?",
 				new RowMapperRentig(), id);
-
 		return lista.isEmpty() ? null : lista.get(0);
 	}
 
@@ -184,7 +181,6 @@ public class RentingController {
 		// 1. Comprobamos si existe el cliente.
 		List<Cliente> clientes = jdbcTemplate.query("SELECT * FROM clientes WHERE idCliente = ?",
 				new RowMapperCliente(), idCliente);
-
 		if (clientes.isEmpty()) {
 			return "No existe el cliente";
 		}
@@ -192,14 +188,12 @@ public class RentingController {
 		// 2. Comprobamos si existe el vehiculo.
 		List<Vehiculo> vehiculos = jdbcTemplate.query("SELECT * FROM vehiculos WHERE idVehiculo = ?",
 				new RowMapperVehiculo(), idVehiculo);
-
 		if (vehiculos.isEmpty()) {
 			return "No existe el vehiculo";
 		}
 
 		// 3. Comprobamos si el vehiculo esta disponible.
 		Vehiculo vehiculo = vehiculos.get(0);
-
 		if (!vehiculo.isDisponible()) {
 			return "El vehiculo no esta disponible";
 		}
@@ -210,8 +204,8 @@ public class RentingController {
 				idCliente, idVehiculo, fechaInicio, fechaDevolucion);
 
 		// 5. Marcamos el vehiculo como no disponible.
-		int filasVehiculo = jdbcTemplate.update("UPDATE vehiculos SET disponible = FALSE WHERE idVehiculo = ?",
-				idVehiculo);
+		int filasVehiculo = jdbcTemplate.update(
+				"UPDATE vehiculos SET disponible = FALSE WHERE idVehiculo = ?", idVehiculo);
 
 		if (filasAlquiler > 0 && filasVehiculo > 0) {
 			return "Alquiler creado correctamente";
@@ -227,7 +221,6 @@ public class RentingController {
 		// 1. Buscamos el alquiler.
 		List<AlquilerVehiculo> alquileres = jdbcTemplate.query("SELECT * FROM alquileres WHERE idAlquiler = ?",
 				new RowMapperRentig(), id);
-
 		if (alquileres.isEmpty()) {
 			return "No existe el alquiler";
 		}
@@ -240,12 +233,12 @@ public class RentingController {
 		}
 
 		// 3. Cerramos el alquiler y guardamos el coste total.
-		int filasAlquiler = jdbcTemplate
-				.update("UPDATE alquileres SET estado = FALSE, costeTotal = ? WHERE idAlquiler = ?", costeTotal, id);
+		int filasAlquiler = jdbcTemplate.update(
+				"UPDATE alquileres SET estado = FALSE, costeTotal = ? WHERE idAlquiler = ?", costeTotal, id);
 
 		// 4. Volvemos a poner el vehiculo como disponible.
-		int filasVehiculo = jdbcTemplate.update("UPDATE vehiculos SET disponible = TRUE WHERE idVehiculo = ?",
-				alquiler.getIdVehiculo());
+		int filasVehiculo = jdbcTemplate.update(
+				"UPDATE vehiculos SET disponible = TRUE WHERE idVehiculo = ?", alquiler.getIdVehiculo());
 
 		if (filasAlquiler > 0 && filasVehiculo > 0) {
 			return "Vehiculo devuelto correctamente";

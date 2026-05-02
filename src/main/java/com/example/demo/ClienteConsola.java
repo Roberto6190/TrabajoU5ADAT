@@ -64,12 +64,11 @@ public class ClienteConsola {
 	}
 
 	// MENÚ VEHÍCULOS
-
 	private static void menuVehiculos() {
 
 		int opcion = 0;
 		String regexTipos = "^(Pequeño|Mediano|Grande|Todo-terreno|Lujo|Mono-volumen|Furgoneta)$";
-		
+
 		System.out.println("==== MENU VEHICULOS ====");
 		System.out.println("1. Listar todos los vehiculos.");
 		System.out.println("2. Listar vehiculos disponibles.");
@@ -92,7 +91,6 @@ public class ClienteConsola {
 
 		case 3:
 			long idBuscar = leerLong("ID del vehiculo a buscar: ");
-
 			String resultado = get(BASE + "/vehiculos/" + idBuscar);
 			if (resultado.isEmpty() || resultado.equals("null")) {
 				System.err.println("ERROR: VEHICULO NO ENCONTRADO.");
@@ -113,7 +111,7 @@ public class ClienteConsola {
 				if (tipo.isEmpty()) {
 					System.err.println("ERROR: NO PUEDE ESTAR VACIO.");
 				} else if (!tipo.matches(regexTipos)) {
-					System.err.println("ERROR: TIPO NO VALIDO. (Ej: pequeño, lujo, furgoneta...)");
+					System.err.println("ERROR: TIPO NO VALIDO. (Ej: Pequeño, Lujo, Furgoneta...)");
 				}
 			} while (!tipo.matches(regexTipos));
 
@@ -131,7 +129,6 @@ public class ClienteConsola {
 
 		case 5:
 			long idBorrar = leerLong("ID del vehiculo a borrar: ");
-
 			String resultadoBorrar = get(BASE + "/vehiculos/delete/" + idBorrar);
 			if (resultadoBorrar.isEmpty() || resultadoBorrar.equals("null")) {
 				System.err.println("ERROR: VEHICULO NO ENCONTRADO.");
@@ -171,7 +168,6 @@ public class ClienteConsola {
 
 		case 2:
 			long idBuscar = leerLong("ID del cliente a buscar: ");
-
 			String resultado = get(BASE + "/clientes/" + idBuscar);
 			if (resultado.isEmpty() || resultado.equals("null")) {
 				System.err.println("ERROR: CLIENTE NO ENCONTRADO.");
@@ -229,7 +225,6 @@ public class ClienteConsola {
 
 		case 4:
 			long idBorrar = leerLong("ID del cliente a borrar: ");
-
 			String resultadoBorrar = get(BASE + "/clientes/delete/" + idBorrar);
 			if (resultadoBorrar.isEmpty() || resultadoBorrar.equals("null")) {
 				System.err.println("ERROR: CLIENTE NO ENCONTRADO.");
@@ -244,7 +239,7 @@ public class ClienteConsola {
 	}
 
 	// MENÚ ALQUILERES — solo supervisión, sin crear ni devolver
-
+	
 	private static void menuAlquileres() {
 
 		int opcion = 0;
@@ -271,7 +266,6 @@ public class ClienteConsola {
 
 		case 3:
 			long idBuscar = leerLong("ID del alquiler a buscar: ");
-
 			String resultado = get(BASE + "/alquileres/" + idBuscar);
 			if (resultado.isEmpty() || resultado.equals("null")) {
 				System.err.println("ERROR: ALQUILER NO ENCONTRADO.");
@@ -296,6 +290,7 @@ public class ClienteConsola {
 	}
 
 	// MÉTODOS AUXILIARES
+
 	// Lee un String no vacío.
 	private static String leerCadena(String mensaje) {
 		String entrada;
