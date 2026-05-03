@@ -213,14 +213,14 @@ public class ClienteConsola {
 				}
 			} while (!dni.matches(regexDNI));
 
-			String urlAnhadir = BASE + "/clientes/anhadir"
+			String urlAniadir = BASE + "/clientes/aniadir"
 					+ "?nombre=" + nombre.trim()
 					+ "&apellido=" + apellido.trim()
 					+ "&email=" + email.trim()
 					+ "&telefono=" + telefono.trim()
 					+ "&DNI=" + dni.trim();
 
-			System.out.println(get(urlAnhadir));
+			System.out.println(get(urlAniadir));
 			break;
 
 		case 4:

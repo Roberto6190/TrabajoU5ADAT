@@ -130,13 +130,22 @@ public class RentingController {
 	}
 
 	// Añadir cliente.
-	@GetMapping("/clientes/anhadir")
+	@GetMapping("/clientes/aniadir")
 	public String insertarCliente(@RequestParam String nombre, @RequestParam String apellido,
-			@RequestParam String email, @RequestParam String telefono, @RequestParam String DNI) {
-		int filas = jdbcTemplate.update(
-				"INSERT INTO clientes (nombre, apellido, email, telefono, DNI) VALUES (?,?,?,?,?)",
-				nombre, apellido, email, telefono, DNI);
-		return filas > 0 ? "Cliente añadido" : "Error al añadir cliente";
+	        @RequestParam String email, @RequestParam String telefono, @RequestParam String DNI) {
+	    try {
+	        int filas = jdbcTemplate.update(
+	                "INSERT INTO clientes (nombre, apellido, email, telefono, DNI) VALUES (?,?,?,?,?)",
+	                nombre, apellido, email, telefono, DNI);
+
+	        return filas > 0 ? "Cliente añadido" : "Error al añadir cliente";
+
+	    } catch (Exception e) {
+	        if (e.getMessage().contains("Duplicate entry")) {
+	            return "Error: ya existe un cliente con ese email, teléfono o DNI.";
+	        }
+	        return "Error al añadir cliente.";
+	    }
 	}
 
 	// Borrar cliente.
