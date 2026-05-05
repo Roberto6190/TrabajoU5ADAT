@@ -26,7 +26,7 @@ public class ClienteConsola {
 	}
 
 	// MAIN
-	
+
 	public static void main(String[] args) {
 		System.out.println("==== PANEL DE ADMINISTRACION — RENTING DE VEHICULOS ====");
 
@@ -67,7 +67,6 @@ public class ClienteConsola {
 	private static void menuVehiculos() {
 
 		int opcion = 0;
-		String regexTipos = "^(Pequeño|Mediano|Grande|Todo-terreno|Lujo|Mono-volumen|Furgoneta)$";
 
 		System.out.println("==== MENU VEHICULOS ====");
 		System.out.println("1. Listar todos los vehiculos.");
@@ -104,25 +103,37 @@ public class ClienteConsola {
 			String modelo = leerCadena("Modelo: ");
 			String matricula = leerCadena("Matricula: ");
 
-			String tipo;
+			int seleccionTipos = 0;
+			String tipo = "";
+			String[] tipos = { "Pequeño", "Mediano", "Grande", "Todo-terreno", "Lujo", "Mono-volumen", "Furgoneta" };
+
 			do {
-				System.out.print("Tipo (Pequeño/Mediano/Grande/Todo-terreno/Lujo/Mono-volumen/Furgoneta): ");
-				tipo = in.nextLine().trim();
-				if (tipo.isEmpty()) {
-					System.err.println("ERROR: NO PUEDE ESTAR VACIO.");
-				} else if (!tipo.matches(regexTipos)) {
-					System.err.println("ERROR: TIPO NO VALIDO. (Ej: Pequeño, Lujo, Furgoneta...)");
+				System.out.print("Tipos:\n");
+				for (int i = 0; i < tipos.length; i++) {
+					System.out.println((i + 1) + ". " + tipos[i]);
 				}
-			} while (!tipo.matches(regexTipos));
+				System.out.println("Introduce el número del tipo: ");
+
+				if (!in.hasNextInt()) {
+					in.nextLine();
+					System.out.println("ERROR: Debes introducir un número.");
+					continue;
+				}
+
+				seleccionTipos = in.nextInt();
+
+				if (seleccionTipos > 0 && seleccionTipos <= tipos.length) {
+					tipo = tipos[seleccionTipos - 1];
+				} else {
+					System.out.println("ERROR: Selecciona uno de los números disponibles.");
+				}
+
+			} while (seleccionTipos < 1 || seleccionTipos > tipos.length);
 
 			double precio = leerDouble("Precio por dia: ");
 
-			String urlAniadir = BASE + "/vehiculos/aniadir"
-					+ "?marca=" + marca.trim()
-					+ "&modelo=" + modelo.trim()
-					+ "&matricula=" + matricula.trim()
-					+ "&tipo=" + tipo.trim()
-					+ "&precio=" + precio;
+			String urlAniadir = BASE + "/vehiculos/aniadir" + "?marca=" + marca.trim() + "&modelo=" + modelo.trim()
+					+ "&matricula=" + matricula.trim() + "&tipo=" + tipo.trim() + "&precio=" + precio;
 
 			System.out.println(get(urlAniadir));
 			break;
@@ -140,6 +151,7 @@ public class ClienteConsola {
 		default:
 			System.err.println("ERROR: Opcion no valida.");
 		}
+
 	}
 
 	// MENÚ CLIENTES
@@ -213,12 +225,8 @@ public class ClienteConsola {
 				}
 			} while (!dni.matches(regexDNI));
 
-			String urlAniadir = BASE + "/clientes/aniadir"
-					+ "?nombre=" + nombre.trim()
-					+ "&apellido=" + apellido.trim()
-					+ "&email=" + email.trim()
-					+ "&telefono=" + telefono.trim()
-					+ "&DNI=" + dni.trim();
+			String urlAniadir = BASE + "/clientes/aniadir" + "?nombre=" + nombre.trim() + "&apellido=" + apellido.trim()
+					+ "&email=" + email.trim() + "&telefono=" + telefono.trim() + "&DNI=" + dni.trim();
 
 			System.out.println(get(urlAniadir));
 			break;
@@ -239,7 +247,7 @@ public class ClienteConsola {
 	}
 
 	// MENÚ ALQUILERES — solo supervisión, sin crear ni devolver
-	
+
 	private static void menuAlquileres() {
 
 		int opcion = 0;
