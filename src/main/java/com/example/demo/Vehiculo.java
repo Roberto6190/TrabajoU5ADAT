@@ -6,17 +6,17 @@ import java.io.Serializable;
 //Debe tener constructor vacío para que Spring pueda
 //deserializar el JSON que llega en los POST.
 
-public class Vehiculo implements Serializable{
+public class Vehiculo implements Serializable {
 
 	private long idVehiculo;
 	private String marca, modelo, matricula, tipoVehiculo;
 	private double precio_dia;
 	private boolean disponible;
-	
+
 	public Vehiculo() {
-		
+
 	}
-	
+
 	public Vehiculo(long idVehiculo, String marca, String modelo, String matricula, String tipoVehiculo,
 			double precio_dia, boolean disponible) {
 		this.idVehiculo = idVehiculo;
@@ -31,57 +31,62 @@ public class Vehiculo implements Serializable{
 	public long getIdVehiculo() {
 		return idVehiculo;
 	}
-	
+
 	public void setIdVehiculo(long idVehiculo) {
 		this.idVehiculo = idVehiculo;
 	}
-	
+
 	public String getMarca() {
 		return marca;
 	}
-	
+
 	public void setMarca(String marca) {
 		this.marca = marca;
 	}
-	
+
 	public String getModelo() {
 		return modelo;
 	}
-	
+
 	public void setModelo(String modelo) {
 		this.modelo = modelo;
 	}
-	
+
 	public String getMatricula() {
 		return matricula;
 	}
-	
+
 	public void setMatricula(String matricula) {
 		this.matricula = matricula;
 	}
-	
+
 	public String getTipoVehiculo() {
 		return tipoVehiculo;
 	}
-	
+
 	public void setTipoVehiculo(String tipoVehiculo) {
 		this.tipoVehiculo = tipoVehiculo;
 	}
-	
+
 	public double getPrecio_dia() {
 		return precio_dia;
 	}
-	
+
 	public void setPrecio_dia(double precio_dia) {
 		this.precio_dia = precio_dia;
 	}
-	
+
 	public boolean isDisponible() {
 		return disponible;
 	}
-	
+
 	public void setDisponible(boolean disponible) {
 		this.disponible = disponible;
 	}
-	
+
+	public String toString() {
+		return String.format("%-10s%-22s%-22s%-22s%-22s%-22s%-22s", idVehiculo, marca, modelo, matricula, tipoVehiculo,
+				precio_dia, (disponible ? "Si" : "No"));
+	};
+
 }
