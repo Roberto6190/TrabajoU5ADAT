@@ -9,12 +9,15 @@
 <body class="bg-slate-100 min-h-screen text-slate-800">
 
 	<header class="bg-white shadow-sm border-b border-indigo-100">
-		<div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+		<div
+			class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
 			<div>
 				<h1 class="text-3xl font-extrabold text-indigo-600">JaiRoCar</h1>
-				<p class="text-sm text-slate-500 mt-2">Portal de alquiler de coches</p>
+				<p class="text-sm text-slate-500 mt-2">Portal de alquiler de
+					coches</p>
 			</div>
-			<div id="menu-superior" class="text-sm font-semibold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100">
+			<div id="menu-superior"
+				class="text-sm font-semibold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100">
 				<span>Acceso clientes</span>
 			</div>
 		</div>
@@ -26,124 +29,162 @@
 
 			<div class="bg-indigo-600 text-white rounded-3xl shadow-lg p-8 mb-8">
 				<div class="max-w-3xl">
-					<p class="text-indigo-100 text-sm font-semibold mb-2">Alquiler de coches sencillo para clientes</p>
-					<h2 class="text-4xl font-bold mb-4">Alquila tu próximo coche en pocos pasos</h2>
-					<p class="text-indigo-100 text-lg">Inicia sesión con tu DNI o crea una cuenta para consultar coches disponibles y gestionar tus alquileres.</p>
+					<p class="text-indigo-100 text-sm font-semibold mb-2">Alquiler
+						de coches sencillo para clientes</p>
+					<h2 class="text-4xl font-bold mb-4">Alquila tu próximo coche
+						en pocos pasos</h2>
+					<p class="text-indigo-100 text-lg">Inicia sesión con tu DNI o
+						crea una cuenta para consultar coches disponibles y gestionar tus
+						alquileres.</p>
 				</div>
 			</div>
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-				<div class="bg-white rounded-2xl shadow p-6 border-t-4 border-t-indigo-500">
-					<h2 class="text-xl font-bold text-slate-900 mb-2">Ya tengo cuenta</h2>
-					<p class="text-slate-500 text-sm mb-5">Introduce tu DNI para acceder a tu panel de cliente.</p>
+				<div
+					class="bg-white rounded-2xl shadow p-6 border-t-4 border-t-indigo-500">
+					<h2 class="text-xl font-bold text-slate-900 mb-2">Ya tengo
+						cuenta</h2>
+					<p class="text-slate-500 text-sm mb-5">Introduce tu DNI para
+						acceder a tu panel de cliente.</p>
 
-					<label class="label">DNI</label>
-					<input id="dniLogin" class="input" placeholder="Ej: 12345678A">
+					<label class="label">DNI</label> <input id="dniLogin" class="input"
+						placeholder="Ej: 12345678A">
 
-					<button onclick="iniciarSesion()" class="btn w-full">Entrar al panel</button>
-					<div id="resultado-login" style="display:none" class="mensaje mt-4"></div>
+					<button onclick="iniciarSesion()" class="btn w-full">Entrar
+						al panel</button>
+					<div id="resultado-login" style="display: none"
+						class="mensaje mt-4"></div>
 				</div>
 
-				<div class="bg-white rounded-2xl shadow p-6 border-t-4 border-t-cyan-500">
+				<div
+					class="bg-white rounded-2xl shadow p-6 border-t-4 border-t-cyan-500">
 					<h2 class="text-xl font-bold text-slate-900 mb-2">Crear cuenta</h2>
-					<p class="text-slate-500 text-sm mb-5">Regístrate como cliente nuevo para poder alquilar coches.</p>
+					<p class="text-slate-500 text-sm mb-5">Regístrate como cliente
+						nuevo para poder alquilar coches.</p>
 
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 						<div>
-							<label class="label">Nombre</label>
-							<input id="nombre" class="input" placeholder="Nombre">
+							<label class="label">Nombre</label> <input id="nombre"
+								class="input" placeholder="Nombre">
 						</div>
 						<div>
-							<label class="label">Apellido</label>
-							<input id="apellido" class="input" placeholder="Apellido">
+							<label class="label">Apellido</label> <input id="apellido"
+								class="input" placeholder="Apellido">
 						</div>
 					</div>
 
-					<label class="label">Email</label>
-					<input id="email" class="input" placeholder="nombre@dominio.com">
+					<label class="label">Email</label> <input id="email" class="input"
+						placeholder="nombre@dominio.com">
 
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 						<div>
-							<label class="label">Teléfono</label>
-							<input id="telefono" class="input" placeholder="9 dígitos">
+							<label class="label">Teléfono</label> <input id="telefono"
+								class="input" placeholder="9 dígitos">
 						</div>
 						<div>
-							<label class="label">DNI</label>
-							<input id="dni" class="input" placeholder="12345678A">
+							<label class="label">DNI</label> <input id="dni" class="input"
+								placeholder="12345678A">
 						</div>
 					</div>
 
-					<button onclick="registrarCliente()" class="btn w-full">Crear cuenta</button>
-					<div id="resultado-registro" style="display:none" class="mensaje mt-4"></div>
+					<button onclick="registrarCliente()" class="btn w-full">Crear
+						cuenta</button>
+					<div id="resultado-registro" style="display: none"
+						class="mensaje mt-4"></div>
 				</div>
 
-				<div class="bg-white rounded-2xl shadow p-5 md:col-span-2 border border-slate-200">
-					<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+				<div
+					class="bg-white rounded-2xl shadow p-5 md:col-span-2 border border-slate-200">
+					<div
+						class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 						<div>
-							<h2 class="text-lg font-bold text-slate-900">Inicializar base de datos</h2>
-							<p class="text-slate-500 text-sm">Usa este botón una sola vez si las tablas todavía no existen.</p>
+							<h2 class="text-lg font-bold text-slate-900">Inicializar
+								base de datos</h2>
+							<p class="text-slate-500 text-sm">Usa este botón una sola vez
+								si las tablas todavía no existen.</p>
 						</div>
-						<button onclick="crearTablas()" class="btn-secundario">Crear tablas</button>
+						<button onclick="crearTablas()" class="btn-secundario">Crear
+							tablas</button>
 					</div>
-					<div id="resultado-tablas" style="display:none" class="mensaje mt-4"></div>
+					<div id="resultado-tablas" style="display: none"
+						class="mensaje mt-4"></div>
 				</div>
 
 			</div>
 		</div>
 
-		<div id="zona-gestiones" style="display:none">
+		<div id="zona-gestiones" style="display: none">
 
-			<div class="bg-white rounded-3xl shadow p-6 mb-6 border-l-4 border-l-indigo-500">
-				<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+			<div
+				class="bg-white rounded-3xl shadow p-6 mb-6 border-l-4 border-l-indigo-500">
+				<div
+					class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 					<div>
-						<p class="text-indigo-600 font-semibold text-sm">Panel de cliente</p>
-						<h2 id="saludo-cliente" class="text-3xl font-bold text-slate-900 mt-1"></h2>
+						<p class="text-indigo-600 font-semibold text-sm">Panel de
+							cliente</p>
+						<h2 id="saludo-cliente"
+							class="text-3xl font-bold text-slate-900 mt-1"></h2>
 						<p id="dni-cliente" class="text-slate-500 mt-2"></p>
 					</div>
-					<button onclick="cerrarSesion()" class="btn-secundario">Cerrar sesión</button>
+					<button onclick="cerrarSesion()" class="btn-secundario">Cerrar
+						sesión</button>
 				</div>
 			</div>
 
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-				<div class="bg-white rounded-2xl shadow p-6 lg:col-span-2 border-t-4 border-t-blue-500">
-					<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+				<div
+					class="bg-white rounded-2xl shadow p-6 lg:col-span-2 border-t-4 border-t-blue-500">
+					<div
+						class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
 						<div>
-							<h2 class="text-xl font-bold text-slate-900">Catálogo disponible</h2>
-							<p class="text-slate-500 text-sm">Consulta los coches libres para alquilar.</p>
+							<h2 class="text-xl font-bold text-slate-900">Catálogo
+								disponible</h2>
+							<p class="text-slate-500 text-sm">Consulta los coches libres
+								para alquilar.</p>
 						</div>
-						<button onclick="listarDisponibles()" class="btn-secundario">Actualizar catálogo</button>
+						<button onclick="listarDisponibles()" class="btn-secundario">Actualizar
+							catálogo</button>
 					</div>
-					<div id="resultado-vehiculos" style="display:none" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+					<div id="resultado-vehiculos" style="display: none"
+						class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 				</div>
 
-				<div class="bg-white rounded-2xl shadow p-6 border-t-4 border-t-cyan-500">
-					<h2 class="text-xl font-bold text-slate-900 mb-2">Nuevo alquiler</h2>
-					<p class="text-slate-500 text-sm mb-5">Introduce el ID del coche que aparece en el catálogo.</p>
+				<div
+					class="bg-white rounded-2xl shadow p-6 border-t-4 border-t-cyan-500">
+					<h2 class="text-xl font-bold text-slate-900 mb-2">Nuevo
+						alquiler</h2>
+					<p class="text-slate-500 text-sm mb-5">Introduce el ID del
+						coche que aparece en el catálogo.</p>
 
-					<label class="label">ID Coche</label>
-					<input id="idVehiculo" class="input" placeholder="Ej: 1">
+					<label class="label">ID Coche</label> <input id="idVehiculo"
+						class="input" placeholder="Ej: 1"> <label class="label">Fecha
+						inicio</label> <input id="fechaInicio" class="input" type="date">
 
-					<label class="label">Fecha inicio</label>
-					<input id="fechaInicio" class="input" type="date">
+					<label class="label">Fecha devolución</label> <input
+						id="fechaDevolucion" class="input" type="date">
 
-					<label class="label">Fecha devolución</label>
-					<input id="fechaDevolucion" class="input" type="date">
-
-					<button onclick="crearAlquiler()" class="btn w-full">Confirmar alquiler</button>
-					<div id="resultado-alquiler" style="display:none" class="mensaje mt-4"></div>
+					<button onclick="crearAlquiler()" class="btn w-full">Confirmar
+						alquiler</button>
+					<div id="resultado-alquiler" style="display: none"
+						class="mensaje mt-4"></div>
 				</div>
 
-				<div class="bg-white rounded-2xl shadow p-6 lg:col-span-3 border-t-4 border-t-indigo-500">
-					<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+				<div
+					class="bg-white rounded-2xl shadow p-6 lg:col-span-3 border-t-4 border-t-indigo-500">
+					<div
+						class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
 						<div>
 							<h2 class="text-xl font-bold text-slate-900">Mis alquileres</h2>
-							<p class="text-slate-500 text-sm">Revisa tus alquileres activos y cerrados.</p>
+							<p class="text-slate-500 text-sm">Revisa tus alquileres
+								activos y cerrados.</p>
 						</div>
-						<button onclick="verMisAlquileres()" class="btn-secundario">Ver mis alquileres</button>
+						<button onclick="verMisAlquileres()" class="btn-secundario">Ver
+							mis alquileres</button>
 					</div>
-					<div id="resultado-misalquileres" style="display:none" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+					<div id="resultado-misalquileres" style="display: none"
+						class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 				</div>
 
 			</div>
@@ -351,7 +392,7 @@
 				+ "&fechaInicio=" + fechaInicio
 				+ "&fechaDevolucion=" + fechaDevolucion;
 
-			pedir(url, function(datos) {
+			pedir(encodeURI(url), function(datos) {
 				mostrarTexto("resultado-alquiler", datos);
 				listarDisponibles();
 			});
