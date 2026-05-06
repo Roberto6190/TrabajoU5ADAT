@@ -1,10 +1,12 @@
 package com.example.demo;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class ClienteConsola {
@@ -132,8 +134,11 @@ public class ClienteConsola {
 
 			double precio = leerDouble("Precio por dia: ");
 
-			String urlAniadir = BASE + "/vehiculos/aniadir" + "?marca=" + marca.trim() + "&modelo=" + modelo.trim()
-					+ "&matricula=" + matricula.trim() + "&tipo=" + tipo.trim() + "&precio=" + precio;
+			String urlAniadir = BASE + "/vehiculos/aniadir" + "?marca="
+					+ URLEncoder.encode(marca.trim(), StandardCharsets.UTF_8) + "&modelo="
+					+ URLEncoder.encode(modelo.trim(), StandardCharsets.UTF_8) + "&matricula="
+					+ URLEncoder.encode(matricula.trim(), StandardCharsets.UTF_8) + "&tipo="
+					+ URLEncoder.encode(tipo.trim(), StandardCharsets.UTF_8) + "&precio=" + precio;
 
 			System.out.println(get(urlAniadir));
 			break;
