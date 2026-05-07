@@ -2,11 +2,13 @@ package com.example.demo;
 
 import java.io.Serializable;
 
-//POJO que representa un cliente registrado.
-//Los atributos coinciden columna a columna con la tabla clientes.
+// POJO que representa un cliente registrado en el sistema.
+// Cada atributo coincide con una columna de la tabla "clientes" en la BD.
+// Implementa Serializable para que Java pueda convertir el objeto a bytes.
 
 public class Cliente implements Serializable {
 
+	// Atributos, uno por columna de la tabla clientes.
 	private long idCliente;
 	private String nombre, apellido, email, telefono, DNI;
 
@@ -14,6 +16,7 @@ public class Cliente implements Serializable {
 
 	}
 
+	// Constructor completo — lo usa el RowMapperCliente para crear un Cliente.
 	public Cliente(long idCliente, String nombre, String apellido, String email, String telefono, String dNI) {
 		this.idCliente = idCliente;
 		this.nombre = nombre;
@@ -22,6 +25,7 @@ public class Cliente implements Serializable {
 		this.telefono = telefono;
 		DNI = dNI;
 	}
+
 
 	public long getIdCliente() {
 		return idCliente;
@@ -73,7 +77,8 @@ public class Cliente implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("%-10s%-22s%-22s%-30s%-22s%-22s", idCliente, nombre, apellido, email, telefono, DNI);
+		return String.format("%-10s%-22s%-22s%-30s%-22s%-22s",
+				idCliente, nombre, apellido, email, telefono, DNI);
 	}
 
 }

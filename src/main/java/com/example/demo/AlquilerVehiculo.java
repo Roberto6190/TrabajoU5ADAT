@@ -2,21 +2,26 @@ package com.example.demo;
 
 import java.io.Serializable;
 
-//POJO que representa un alquiler activo o cerrado.
-//estado = true significa activo, false significa cerrado/devuelto.
-//costeTotal se calcula al devolver, hasta entonces vale 0.
+// POJO que representa un alquiler, tanto si sigue activo como si ya se cerro.
+// Cada atributo coincide con una columna de la tabla "alquileres" en la BD.
+// No guarda objetos Cliente o Vehiculo enteros, solo sus IDs como claves foraneas.
+// Implementa Serializable para que Java pueda convertir el objeto a bytes.
 
 public class AlquilerVehiculo implements Serializable {
 
+	// Atributos — uno por columna de la tabla alquileres.
+	// estado: true = alquiler activo, false = alquiler cerrado (vehiculo devuelto).
+	// costeTotal: vale 0 mientras el alquiler esta activo, se rellena al devolver.
 	private long idAlquiler, idVehiculo, idCliente;
 	private String fechaInicio, fechaDevolucion;
-	private boolean estado; // true = activo, false = cerrado
+	private boolean estado;
 	private double costeTotal;
 
 	public AlquilerVehiculo() {
 
 	}
 
+	// Constructor completo — lo usa el RowMapperRentig para crear un AlquilerVehiculo.
 	public AlquilerVehiculo(long idAlquiler, long idVehiculo, long idCliente, String fechaInicio,
 			String fechaDevolucion, boolean estado, double costeTotal) {
 		this.idAlquiler = idAlquiler;
@@ -86,8 +91,11 @@ public class AlquilerVehiculo implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s", idAlquiler, idVehiculo, idCliente, fechaInicio,
-				fechaDevolucion, estado, costeTotal);
+		return String.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s",
+				idAlquiler, idVehiculo, idCliente,
+				fechaInicio, fechaDevolucion,
+				(estado ? "Activo" : "Cerrado"),
+				(costeTotal > 0 ? costeTotal + "€" : "Pendiente"));
 	}
 
 }
