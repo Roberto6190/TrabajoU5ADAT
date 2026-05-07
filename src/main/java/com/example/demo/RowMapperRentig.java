@@ -6,16 +6,12 @@ import org.springframework.jdbc.core.RowMapper;
 
 public class RowMapperRentig implements RowMapper<AlquilerVehiculo> {
 
-	// Devuelve un objeto AlquilerVehiculo construido con todos los datos de esa fila.
+	// Devuelve un objeto AlquilerVehiculo construido con todos los datos de esa
+	// fila.
 	public AlquilerVehiculo mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		return new AlquilerVehiculo(
-				rs.getLong("idAlquiler"),
-				rs.getLong("idVehiculo"),
-				rs.getLong("idCliente"),
-				rs.getString("fechaInicio"),
-				rs.getString("fechaDevolucion"),
-				rs.getBoolean("estado"),
+		return new AlquilerVehiculo(rs.getLong("idAlquiler"), rs.getLong("idVehiculo"), rs.getLong("idCliente"),
+				rs.getString("fechaInicio"), rs.getString("fechaDevolucion"), rs.getBoolean("estado"),
 				rs.getDouble("costeTotal"));
 	}
 }

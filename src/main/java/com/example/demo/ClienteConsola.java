@@ -11,15 +11,21 @@ import java.util.Scanner;
 
 import tools.jackson.databind.ObjectMapper;
 
+// Cliente Java por consola que actua como panel de administracion del sistema.
+// Se comunica con el servidor Spring Boot mediante peticiones GET.
+// NO accede directamente a la BD porque todo pasa por los endpoints del servidor.
+
 public class ClienteConsola {
 
-	// URL base del servidor Spring Boot.
 	static final String BASE = "http://localhost:8080";
 	static HttpClient cliente = HttpClient.newHttpClient();
 	static ObjectMapper om = new ObjectMapper();
 	static Scanner in = new Scanner(System.in);
 
-	// Método auxiliar: construye la request, la envía y devuelve el body.
+	// Metodo auxiliar que construye la peticion HTTP, la envia de forma sincrona
+	// (se bloquea hasta recibir respuesta) y devuelve el cuerpo como String.
+	// BodyHandlers.ofString() indica que la respuesta se recibe como texto.
+
 	static String get(String url) {
 		try {
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
@@ -29,8 +35,6 @@ public class ClienteConsola {
 			return "ERROR DE CONEXION: " + e.getMessage();
 		}
 	}
-
-	// MAIN
 
 	public static void main(String[] args) {
 		System.out.println("==== PANEL DE ADMINISTRACION — RENTING DE VEHICULOS ====");
@@ -68,7 +72,6 @@ public class ClienteConsola {
 		} while (opcion != 0);
 	}
 
-	// MENÚ VEHÍCULOS
 	private static void menuVehiculos() {
 
 		int opcion = 0;
@@ -88,19 +91,21 @@ public class ClienteConsola {
 		switch (opcion) {
 
 		case 1:
+			// Llama a /vehiculos y pasa el JSON al metodo listarVehiculos para imprimirlo.
 			jsonVehiculos = get(BASE + "/vehiculos");
 			listarVehiculos(jsonVehiculos);
 			break;
 
 		case 2:
+
 			jsonVehiculos = get(BASE + "/vehiculos/disponibles");
 			listarVehiculos(jsonVehiculos);
 			break;
 
 		case 3:
+
 			long idBuscar = leerLong("ID del vehiculo a buscar: ");
 			jsonVehiculos = get(BASE + "/vehiculos/" + idBuscar);
-
 			listarVehiculos(jsonVehiculos);
 			break;
 
@@ -108,6 +113,9 @@ public class ClienteConsola {
 			String marca = leerCadena("Marca: ");
 			String modelo = leerCadena("Modelo: ");
 			String matricula = leerCadena("Matricula: ");
+
+			// El tipo se elige por numero para evitar errores de escritura
+			// y garantizar que siempre coincida con el ENUM de la BD.
 
 			int seleccionTipos = 0;
 			String tipo = "";
@@ -160,14 +168,16 @@ public class ClienteConsola {
 		default:
 			System.err.println("ERROR: Opcion no valida.");
 		}
-
 	}
-
-	// MENÚ CLIENTES
 
 	private static void menuClientes() {
 
 		int opcion = 0;
+
+		// Expresiones regulares para validar el formato de los campos antes de
+		// enviarlos.
+		// regexEmail: tiene que tener @ y un punto despues.
+
 		String regexEmail = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$";
 		String regexTelefono = "^[0-9]{9}$";
 		String regexDNI = "^[0-9]{8}[A-Za-z]$";
@@ -187,22 +197,20 @@ public class ClienteConsola {
 
 		case 1:
 			jsonClientes = get(BASE + "/clientes");
-
 			listarClientes(jsonClientes);
 			break;
 
 		case 2:
 			long idBuscar = leerLong("ID del cliente a buscar: ");
 			jsonClientes = get(BASE + "/clientes/" + idBuscar);
-
 			listarClientes(jsonClientes);
 			break;
 
 		case 3:
 			String nombre = leerCadena("Nombre: ");
 			String apellido = leerCadena("Apellido: ");
-
 			String email;
+
 			do {
 				System.out.print("Email: ");
 				email = in.nextLine().trim();
@@ -256,8 +264,6 @@ public class ClienteConsola {
 		}
 	}
 
-	// MENÚ ALQUILERES — solo supervisión, sin crear ni devolver
-
 	private static void menuAlquileres() {
 
 		int opcion = 0;
@@ -278,34 +284,29 @@ public class ClienteConsola {
 
 		case 1:
 			jsonAlquileres = get(BASE + "/alquileres");
-
 			listarAlquileres(jsonAlquileres);
 			break;
 
 		case 2:
 			jsonAlquileres = get(BASE + "/alquileres/activos");
-
 			listarAlquileres(jsonAlquileres);
 			break;
 
 		case 3:
 			long idBuscar = leerLong("ID del alquiler a buscar: ");
 			jsonAlquileres = get(BASE + "/alquileres/" + idBuscar);
-
 			listarAlquileres(jsonAlquileres);
 			break;
 
 		case 4:
 			long idCliente = leerLong("ID del cliente: ");
 			jsonAlquileres = get(BASE + "/clientes/" + idCliente + "/alquileres");
-
 			listarAlquileres(jsonAlquileres);
 			break;
 
 		case 5:
 			long idVehiculo = leerLong("ID del vehiculo: ");
 			jsonAlquileres = get(BASE + "/vehiculos/" + idVehiculo + "/alquileres");
-
 			listarAlquileres(jsonAlquileres);
 			break;
 
@@ -314,9 +315,87 @@ public class ClienteConsola {
 		}
 	}
 
-	// MÉTODOS AUXILIARES
+	// Recibe el JSON de vehiculos del servidor, lo convierte a Vehiculo[]
+	// con el ObjectMapper y los imprime usando el toString() de Vehiculo.
 
-	// Lee un String no vacío.
+	private static void listarVehiculos(String jsonRecibido) {
+		if (jsonRecibido.equalsIgnoreCase("null") || jsonRecibido.isEmpty()) {
+			System.err.println("\nError: No hay vehículos que mostrar");
+		} else {
+			try {
+				if (!jsonRecibido.startsWith("[")) {
+					jsonRecibido = "[" + jsonRecibido + "]";
+				}
+
+				Vehiculo[] vehiculo = om.readValue(jsonRecibido, Vehiculo[].class);
+
+				if (vehiculo.length > 0) {
+					System.out.printf("\n%-10s%-22s%-22s%-22s%-22s%-22s%-22s\n", "ID", "MARCA", "MODELO", "MATRÍCULA",
+							"TIPO", "PRECIO/DIA", "DISPONIBLE");
+					for (Vehiculo v : vehiculo) {
+						System.out.println(v.toString());
+					}
+				} else {
+					System.err.println("\nERROR: No hay coches que listar.");
+				}
+			} catch (Exception e) {
+				System.err.println(e);
+			}
+		}
+	}
+
+	private static void listarClientes(String jsonRecibido) {
+		if (jsonRecibido.equalsIgnoreCase("null") || jsonRecibido.isEmpty()) {
+			System.err.println("\nError: No hay clientes que mostrar");
+		} else {
+			try {
+				if (!jsonRecibido.startsWith("[")) {
+					jsonRecibido = "[" + jsonRecibido + "]";
+				}
+
+				Cliente[] cliente = om.readValue(jsonRecibido, Cliente[].class);
+
+				if (cliente.length > 0) {
+					System.out.printf("\n%-10s%-22s%-22s%-30s%-22s%-22s\n", "ID", "NOMBRE", "APELLIDO", "EMAIL",
+							"TELEFONO", "DNI");
+					for (Cliente c : cliente) {
+						System.out.println(c.toString());
+					}
+				} else {
+					System.err.println("\nERROR: No hay clientes que listar.");
+				}
+			} catch (Exception e) {
+				System.err.println(e);
+			}
+		}
+	}
+
+	private static void listarAlquileres(String jsonRecibido) {
+		if (jsonRecibido.equalsIgnoreCase("null") || jsonRecibido.isEmpty()) {
+			System.err.println("\nError: No hay alquileres que mostrar");
+		} else {
+			try {
+				if (!jsonRecibido.startsWith("[")) {
+					jsonRecibido = "[" + jsonRecibido + "]";
+				}
+
+				AlquilerVehiculo[] alquiler = om.readValue(jsonRecibido, AlquilerVehiculo[].class);
+
+				if (alquiler.length > 0) {
+					System.out.printf("\n%-15s%-15s%-15s%-15s%-15s%-15s%-15s\n", "ID ALQUILER", "ID VEHÍCULO",
+							"ID CLIENTE", "F. INICIO", "F.DEVOLUCION", "ESTADO", "COSTE TOTAL");
+					for (AlquilerVehiculo a : alquiler) {
+						System.out.println(a.toString());
+					}
+				} else {
+					System.err.println("\nERROR: No hay alquileres que listar.");
+				}
+			} catch (Exception e) {
+				System.err.println(e);
+			}
+		}
+	}
+
 	private static String leerCadena(String mensaje) {
 		String entrada;
 		do {
@@ -329,7 +408,6 @@ public class ClienteConsola {
 		return entrada;
 	}
 
-	// Lee un long mayor a 0.
 	private static long leerLong(String mensaje) {
 		long valor = 0;
 		boolean esValido = false;
@@ -351,7 +429,6 @@ public class ClienteConsola {
 		return valor;
 	}
 
-	// Lee un double mayor a 0.
 	private static double leerDouble(String mensaje) {
 		double valor = 0;
 		boolean esValido = false;
@@ -371,90 +448,5 @@ public class ClienteConsola {
 			}
 		} while (!esValido);
 		return valor;
-	}
-
-	private static void listarVehiculos(String jsonRecibido) {
-		if (jsonRecibido.equalsIgnoreCase("null") || jsonRecibido.isEmpty()) {
-			System.out.println("\nError: No hay vehículos que mostrar");
-		} else {
-			try {
-				if (!jsonRecibido.startsWith("[")) {
-					jsonRecibido = "[" + jsonRecibido + "]";
-				}
-
-				Vehiculo[] vehiculo = om.readValue(jsonRecibido, Vehiculo[].class);
-
-				if (vehiculo.length > 0) {
-					System.out.printf("\n%-10s%-22s%-22s%-22s%-22s%-22s%-22s\n", "ID", "MARCA", "MODELO", "MATRÍCULA",
-							"TIPO", "PRECIO/DIA", "DISPONIBLE");
-
-					for (Vehiculo v : vehiculo) {
-						System.out.println(v.toString());
-					}
-				} else {
-					System.out.println("\nERROR: No hay coches que listar.");
-
-				}
-			} catch (Exception e) {
-				System.err.println(e);
-			}
-		}
-	}
-
-	private static void listarClientes(String jsonRecibido) {
-
-		if (jsonRecibido.equalsIgnoreCase("null") || jsonRecibido.isEmpty()) {
-			System.out.println("\nError: No hay clientes que mostrar");
-		} else {
-			try {
-				if (!jsonRecibido.startsWith("[")) {
-					jsonRecibido = "[" + jsonRecibido + "]";
-				}
-
-				Cliente[] cliente = om.readValue(jsonRecibido, Cliente[].class);
-
-				if (cliente.length > 0) {
-					System.out.printf("\n%-10s%-22s%-22s%-30s%-22s%-22s\n", "ID", "NOMBRE", "APELLIDO", "EMAIL",
-							"TELEFONO", "DNI");
-
-					for (Cliente c : cliente) {
-						System.out.println(c.toString());
-					}
-				} else {
-					System.out.println("\nERROR: No hay clientes que listar.");
-				}
-
-			} catch (Exception e) {
-				System.err.println(e);
-			}
-		}
-	}
-
-	private static void listarAlquileres(String jsonRecibido) {
-
-		if (jsonRecibido.equalsIgnoreCase("null") || jsonRecibido.isEmpty()) {
-			System.out.println("\nError: No hay alquileres que mostrar");
-		} else {
-			try {
-				if (!jsonRecibido.startsWith("[")) {
-					jsonRecibido = "[" + jsonRecibido + "]";
-				}
-
-				AlquilerVehiculo[] alquiler = om.readValue(jsonRecibido, AlquilerVehiculo[].class);
-
-				if (alquiler.length > 0) {
-					System.out.printf("\n%-15s%-15s%-15s%-15s%-15s%-15s%-15s\n", "ID ALQUILER", "ID VEHÍCULO",
-							"ID CLIENTE", "F. INICIO", "F.DEVOLUCION", "ESTADO", "COSTE TOTAL");
-
-					for (AlquilerVehiculo a : alquiler) {
-						System.out.println(a.toString());
-					}
-				} else {
-					System.out.println("\nERROR: No hay alquileres que listar.");
-				}
-			} catch (Exception e) {
-				System.err.println(e);
-			}
-		}
 	}
 }

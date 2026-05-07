@@ -11,7 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TrabajoU52Application {
 
-	// SpringApplication.run() arranca la aplicacion pasandole la propia clase como referencia.
+	// SpringApplication.run() arranca la aplicacion pasandole la propia clase como
+	// referencia.
 	public static void main(String[] args) {
 		SpringApplication.run(TrabajoU52Application.class, args);
 	}

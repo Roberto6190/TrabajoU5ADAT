@@ -16,6 +16,7 @@
 				<p class="text-sm text-slate-500 mt-2">Portal de alquiler de
 					coches</p>
 			</div>
+			<!-- Este span cambia segun si hay sesión iniciada o no -->
 			<div id="menu-superior"
 				class="text-sm font-semibold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-xl border border-indigo-100">
 				<span>Acceso clientes</span>
@@ -25,6 +26,8 @@
 
 	<main class="max-w-6xl mx-auto px-4 py-8">
 
+		<!-- ZONA LOGIN: visible al cargar la pagina.
+		     Se oculta cuando el usuario se identifica correctamente. -->
 		<div id="zona-login">
 
 			<div class="bg-indigo-600 text-white rounded-3xl shadow-lg p-8 mb-8">
@@ -41,6 +44,7 @@
 
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+				<!-- Formulario de login por DNI -->
 				<div
 					class="bg-white rounded-2xl shadow p-6 border-t-4 border-t-indigo-500">
 					<h2 class="text-xl font-bold text-slate-900 mb-2">Ya tengo
@@ -114,6 +118,9 @@
 			</div>
 		</div>
 
+		<!-- ZONA GESTIONES: oculta al cargar la pagina con style="display:none".
+		     Se muestra cuando el usuario se identifica correctamente.
+		     Contiene el catalogo de coches, el formulario de alquiler y el historial. -->
 		<div id="zona-gestiones" style="display: none">
 
 			<div
@@ -134,6 +141,7 @@
 
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
+				<!-- Catalogo de vehiculos disponibles -->
 				<div
 					class="bg-white rounded-2xl shadow p-6 lg:col-span-2 border-t-4 border-t-blue-500">
 					<div
@@ -147,10 +155,12 @@
 						<button onclick="listarDisponibles()" class="btn-secundario">Actualizar
 							catálogo</button>
 					</div>
+					<!-- Este div se rellena dinamicamente con las tarjetas de vehiculos -->
 					<div id="resultado-vehiculos" style="display: none"
 						class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 				</div>
 
+				<!-- Formulario para crear un alquiler nuevo -->
 				<div
 					class="bg-white rounded-2xl shadow p-6 border-t-4 border-t-cyan-500">
 					<h2 class="text-xl font-bold text-slate-900 mb-2">Nuevo
@@ -171,6 +181,7 @@
 						class="mensaje mt-4"></div>
 				</div>
 
+				<!-- Historial de alquileres del cliente -->
 				<div
 					class="bg-white rounded-2xl shadow p-6 lg:col-span-3 border-t-4 border-t-indigo-500">
 					<div
@@ -183,6 +194,7 @@
 						<button onclick="verMisAlquileres()" class="btn-secundario">Ver
 							mis alquileres</button>
 					</div>
+					<!-- Este div se rellena dinamicamente con las tarjetas de alquileres -->
 					<div id="resultado-misalquileres" style="display: none"
 						class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 				</div>
@@ -193,6 +205,7 @@
 	</main>
 
 	<script>
+
 		document.querySelectorAll(".input").forEach(input => {
 			input.className = "w-full border border-slate-300 rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white";
 		});
@@ -213,16 +226,33 @@
 			caja.className = "bg-slate-100 border border-slate-200 text-slate-700 p-3 rounded-xl text-sm whitespace-pre-wrap";
 		});
 
+		// URL base del servidor Spring Boot — igual que en el ClienteConsola.
 		const URL_BASE = "http://localhost:8080";
 
+		// Guarda el objeto del cliente que ha iniciado sesion.
+		// Vale null cuando no hay sesion. Se usa para sacar el id del cliente
+		// sin que el usuario tenga que escribirlo en ningun formulario.
+		
 		let clienteActual = null;
 
+		// Muestra un mensaje en un div concreto haciendolo visible.
+		// idDiv es el id del elemento HTML donde se muestra el texto.
+		
 		function mostrarTexto(idDiv, texto) {
 			const caja = document.getElementById(idDiv);
 			caja.style.display = "block";
 			caja.textContent = texto;
 		}
 
+		// Funcion equivalente al metodo get() del ClienteConsola pero en JS.
+		// fetch() hace la peticion GET al servidor de forma asincrona —
+		// no se bloquea esperando la respuesta sino que cuando llega ejecuta el .then().
+		// respuesta.text() convierte la respuesta a texto.
+		// Se intenta parsear como JSON con JSON.parse() — si falla (porque el servidor
+		// devolvio un String simple como "Vehiculo añadido") se deja como texto.
+		// En cualquier caso llama a la funcion callback con los datos recibidos.
+		// .catch() captura errores de red, por ejemplo si el servidor no esta arrancado.
+		
 		function pedir(url, funcion) {
 			fetch(url)
 				.then(respuesta => respuesta.text())
@@ -236,12 +266,19 @@
 				.catch(error => funcion("Error de conexión: " + error));
 		}
 
+		// Llama al endpoint /crear del servidor para crear las 3 tablas en la BD.
+		// Solo se usa la primera vez que se arranca el sistema.
+		
 		function crearTablas() {
 			pedir(URL_BASE + "/crear", function(datos) {
 				mostrarTexto("resultado-tablas", datos);
 			});
 		}
 
+		// Valida el DNI con regex y llama a /clientes/dni/{dni} para identificar al usuario.
+		// Si el servidor devuelve un cliente valido llama a entrarAlPanel().
+		// Si devuelve null es que ese DNI no existe y muestra un mensaje de error.
+		
 		function iniciarSesion() {
 			const dni = document.getElementById("dniLogin").value.trim().toUpperCase();
 			const regexDNI = /^[0-9]{8}[A-Z]$/;
@@ -265,6 +302,10 @@
 			});
 		}
 
+		// Guarda el cliente en clienteActual, oculta la zona de login,
+		// muestra la zona de gestiones, escribe el saludo con el nombre del cliente
+		// y carga automaticamente el catalogo de vehiculos disponibles.
+		
 		function entrarAlPanel(cliente) {
 			clienteActual = cliente;
 
@@ -277,6 +318,9 @@
 			listarDisponibles();
 		}
 
+		// Pone clienteActual a null, intercambia las zonas visibles
+		// y limpia el input del DNI y el mensaje de error anterior.
+		
 		function cerrarSesion() {
 			clienteActual = null;
 
@@ -287,6 +331,11 @@
 			document.getElementById("resultado-login").style.display = "none";
 		}
 
+		// Valida todos los campos con regex antes de enviarlos al servidor.
+		// Si el servidor responde con "añadido" hace una segunda llamada a
+		// /clientes/dni/{dni} para obtener el objeto del cliente recien creado
+		// y entra directamente al panel sin tener que hacer login por separado.
+		
 		function registrarCliente() {
 			const nombre = document.getElementById("nombre").value.trim();
 			const apellido = document.getElementById("apellido").value.trim();
@@ -327,6 +376,8 @@
 
 			pedir(url, function(datos) {
 				if (typeof datos === "string" && datos.includes("añadido")) {
+					// Cliente creado — lo buscamos por DNI para obtener su id
+					// y entrar directamente al panel sin paso de login extra.
 					pedir(URL_BASE + "/clientes/dni/" + dni, function(cliente) {
 						if (cliente && cliente.id) {
 							entrarAlPanel(cliente);
@@ -340,10 +391,14 @@
 			});
 		}
 
+		// Recorre el array de vehiculos que devuelve el servidor y por cada uno
+		// crea un div con innerHTML y lo añade al contenedor con appendChild().
+		// Si no hay vehiculos disponibles muestra un mensaje.
+		
 		function mostrarVehiculos(vehiculos) {
 			const caja = document.getElementById("resultado-vehiculos");
 			caja.style.display = "grid";
-			caja.innerHTML = "";
+			caja.innerHTML = ""; // limpia el contenedor antes de volver a rellenarlo
 
 			if (vehiculos.length === 0) {
 				caja.className = "block text-sm text-slate-500";
@@ -365,17 +420,27 @@
 					+ "<span class='bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full'>Disponible</span>"
 					+ "</div>"
 					+ "<p class='text-2xl font-bold text-indigo-600 mb-2'>" + v.precio_dia + " €/día</p>"
+					// El ID del vehiculo se muestra para que el usuario lo copie en el formulario de alquiler
 					+ "<p class='text-sm text-slate-600'>ID coche: <strong>" + v.idVehiculo + "</strong></p>";
 				caja.appendChild(div);
 			});
 		}
 
+		// Llama a /vehiculos/disponibles y pasa los datos a mostrarVehiculos().
+		
 		function listarDisponibles() {
 			pedir(URL_BASE + "/vehiculos/disponibles", function(datos) {
 				mostrarVehiculos(datos);
 			});
 		}
 
+		// Coge el ID del vehiculo y las fechas del formulario.
+		// El idCliente viene de clienteActual.id — el usuario no lo escribe,
+		// lo tiene guardado la app desde que inicio sesion.
+		// encodeURI() codifica los caracteres especiales de la URL (como las fechas).
+		// Despues de crear el alquiler refresca el catalogo para que
+		// el vehiculo alquilado desaparezca de los disponibles.
+		
 		function crearAlquiler() {
 			const idVehiculo = document.getElementById("idVehiculo").value.trim();
 			const fechaInicio = document.getElementById("fechaInicio").value;
@@ -398,6 +463,11 @@
 			});
 		}
 
+		// Recorre el array de alquileres del cliente y por cada uno crea una tarjeta.
+		// El operador ternario a.estado ? "Activo" : "Cerrado" decide el texto del estado.
+		// Si costeTotal es 0 muestra "Pendiente" porque el alquiler sigue activo
+		// y el coste aun no se ha calculado.
+		
 		function mostrarAlquileres(alquileres) {
 			const caja = document.getElementById("resultado-misalquileres");
 			caja.style.display = "grid";
@@ -433,6 +503,9 @@
 			});
 		}
 
+		// Llama a /clientes/{id}/alquileres con el id del cliente actual
+		// y pasa los datos a mostrarAlquileres().
+		
 		function verMisAlquileres() {
 			pedir(URL_BASE + "/clientes/" + clienteActual.id + "/alquileres", function(datos) {
 				mostrarAlquileres(datos);

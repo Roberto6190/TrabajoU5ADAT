@@ -91,11 +91,10 @@ public class Vehiculo implements Serializable {
 	public void setDisponible(boolean disponible) {
 		this.disponible = disponible;
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.format("%-10s%-22s%-22s%-22s%-22s%-22s%-22s",
-				idVehiculo, marca, modelo, matricula, tipoVehiculo,
+		return String.format("%-10s%-22s%-22s%-22s%-22s%-22s%-22s", idVehiculo, marca, modelo, matricula, tipoVehiculo,
 				precio_dia, (disponible ? "Si" : "No"));
 	}
 

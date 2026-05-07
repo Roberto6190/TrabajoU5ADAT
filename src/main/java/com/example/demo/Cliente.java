@@ -26,7 +26,6 @@ public class Cliente implements Serializable {
 		DNI = dNI;
 	}
 
-
 	public long getIdCliente() {
 		return idCliente;
 	}
@@ -77,8 +76,7 @@ public class Cliente implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("%-10s%-22s%-22s%-30s%-22s%-22s",
-				idCliente, nombre, apellido, email, telefono, DNI);
+		return String.format("%-10s%-22s%-22s%-30s%-22s%-22s", idCliente, nombre, apellido, email, telefono, DNI);
 	}
 
 }
