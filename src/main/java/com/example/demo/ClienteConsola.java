@@ -139,7 +139,7 @@ public class ClienteConsola {
 				if (seleccionTipos > 0 && seleccionTipos <= tipos.length) {
 					tipo = tipos[seleccionTipos - 1];
 				} else {
-					System.out.println("ERROR: Selecciona uno de los números disponibles.");
+					System.err.println("ERROR: Selecciona uno de los números disponibles.");
 				}
 
 			} while (seleccionTipos < 1 || seleccionTipos > tipos.length);
@@ -243,8 +243,12 @@ public class ClienteConsola {
 				}
 			} while (!dni.matches(regexDNI));
 
-			String urlAniadir = BASE + "/clientes/aniadir" + "?nombre=" + nombre.trim() + "&apellido=" + apellido.trim()
-					+ "&email=" + email.trim() + "&telefono=" + telefono.trim() + "&DNI=" + dni.trim();
+			String urlAniadir = BASE + "/clientes/aniadir" + "?nombre="
+					+ URLEncoder.encode(nombre.trim(), StandardCharsets.UTF_8) + "&apellido="
+					+ URLEncoder.encode(apellido.trim(), StandardCharsets.UTF_8) + "&email="
+					+ URLEncoder.encode(email.trim(), StandardCharsets.UTF_8) + "&telefono="
+					+ URLEncoder.encode(telefono.trim(), StandardCharsets.UTF_8) + "&DNI="
+					+ URLEncoder.encode(dni.trim(), StandardCharsets.UTF_8);
 
 			System.out.println(get(urlAniadir));
 			break;
@@ -312,6 +316,13 @@ public class ClienteConsola {
 			break;
 		case 6:
 			long idAlquiler = leerLong("ID del alquiler a devolver: ");
+			String jsonAlquiler = get(BASE + "/alquileres/" + idAlquiler);
+
+			if (jsonAlquiler.equalsIgnoreCase("null") || jsonAlquiler.isEmpty()) {
+				System.out.println("\nERROR: No existe el alquiler.");
+				break;
+			}
+
 			long dias = leerLong("Numero de dias: ");
 
 			AlquilerVehiculo alquiler = om.readValue(get(BASE + "/alquileres/" + idAlquiler), AlquilerVehiculo.class);
@@ -367,7 +378,7 @@ public class ClienteConsola {
 				Cliente[] cliente = om.readValue(jsonRecibido, Cliente[].class);
 
 				if (cliente.length > 0) {
-					System.out.printf("\n%-10s%-22s%-22s%-30s%-22s%-22s\n", "ID", "NOMBRE", "APELLIDO", "EMAIL",
+					System.out.printf("\n%-10s%-22s%-22s%-40s%-22s%-22s\n", "ID", "NOMBRE", "APELLIDO", "EMAIL",
 							"TELEFONO", "DNI");
 					for (Cliente c : cliente) {
 						System.out.println(c.toString());

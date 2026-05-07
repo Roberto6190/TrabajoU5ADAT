@@ -97,11 +97,20 @@ public class RentingController {
 	public String deleteVehiculo(@PathVariable long id) {
 		List<AlquilerVehiculo> activos = jdbcTemplate
 				.query("SELECT * FROM alquileres WHERE idVehiculo = ? AND estado = TRUE", new RowMapperRentig(), id);
+
 		if (!activos.isEmpty()) {
-			return "No se puede eliminar: el vehiculo tiene un alquiler activo";
+			return "\nERROR: No se puede eliminar: el vehiculo tiene un alquiler activo o no existe ese ID.";
 		}
+
+		List<AlquilerVehiculo> todos = jdbcTemplate.query("SELECT * FROM alquileres WHERE idVehiculo = ?",
+				new RowMapperRentig(), id);
+
+		if (!todos.isEmpty()) {
+			return "\nERROR: No se puede eliminar: el vehiculo tiene alquileres asociados";
+		}
+
 		int filas = jdbcTemplate.update("DELETE FROM vehiculos WHERE idVehiculo = ?", id);
-		return filas > 0 ? "Vehiculo eliminado" : "Vehiculo no encontrado";
+		return filas > 0 ? "\nVehiculo eliminado" : "\nVehiculo no encontrado";
 	}
 
 	// Devuelve todos los clientes de la tabla.
@@ -161,7 +170,7 @@ public class RentingController {
 			return "No se puede eliminar: el cliente tiene un alquiler activo";
 		}
 		int filas = jdbcTemplate.update("DELETE FROM clientes WHERE idCliente = ?", id);
-		return filas > 0 ? "Cliente eliminado" : "Cliente no encontrado";
+		return filas > 0 ? "\nCliente eliminado" : "\nCliente no encontrado";
 	}
 
 	// Devuelve todos los alquileres de la tabla (activos y cerrados).
@@ -248,8 +257,8 @@ public class RentingController {
 			return "El alquiler ya estaba cerrado";
 		}
 
-		int filasAlquiler = jdbcTemplate
-				.update("UPDATE alquileres SET estado = FALSE, costeTotal = ? WHERE idAlquiler = ?", costeTotal, id);
+		int filasAlquiler = jdbcTemplate.update(
+				"UPDATE alquileres SET estado = FALSE, costeTotal = ROUND(?,2) WHERE idAlquiler = ?", costeTotal, id);
 
 		int filasVehiculo = jdbcTemplate.update("UPDATE vehiculos SET disponible = TRUE WHERE idVehiculo = ?",
 				alquiler.getIdVehiculo());

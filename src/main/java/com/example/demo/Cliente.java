@@ -76,7 +76,7 @@ public class Cliente implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("%-10s%-22s%-22s%-30s%-22s%-22s", idCliente, nombre, apellido, email, telefono, DNI);
+		return String.format("%-10s%-22s%-22s%-40s%-22s%-22s", idCliente, nombre, apellido, email, telefono, DNI);
 	}
 
 }
