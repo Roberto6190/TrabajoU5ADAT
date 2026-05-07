@@ -21,7 +21,7 @@ public class AlquilerVehiculo implements Serializable {
 
 	}
 
-	// Constructor completo — lo usa el RowMapperRentig para crear un
+	// Constructor completo, lo usa el RowMapperRentig para crear un
 	// AlquilerVehiculo.
 	public AlquilerVehiculo(long idAlquiler, long idVehiculo, long idCliente, String fechaInicio,
 			String fechaDevolucion, boolean estado, double costeTotal) {
@@ -95,5 +95,4 @@ public class AlquilerVehiculo implements Serializable {
 		return String.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s", idAlquiler, idVehiculo, idCliente, fechaInicio,
 				fechaDevolucion, (estado ? "Activo" : "Cerrado"), (costeTotal > 0 ? costeTotal + "€" : "Pendiente"));
 	}
-
 }

@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <title>JaiRoCar - Alquiler de coches</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body class="bg-slate-100 min-h-screen text-slate-800">
 
 	<header class="bg-white shadow-sm border-b border-indigo-100">
 		<div
-			class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+			class="max-w-6xl mx-auto px-4 py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
 			<div>
 				<h1 class="text-3xl font-extrabold text-indigo-600">JaiRoCar</h1>
 				<p class="text-sm text-slate-500 mt-2">Portal de alquiler de
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
 				<!-- Formulario de login por DNI -->
 				<div
@@ -67,7 +67,7 @@
 					<p class="text-slate-500 text-sm mb-5">Regístrate como cliente
 						nuevo para poder alquilar coches.</p>
 
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
 						<div>
 							<label class="label">Nombre</label> <input id="nombre"
 								class="input" placeholder="Nombre">
@@ -81,7 +81,7 @@
 					<label class="label">Email</label> <input id="email" class="input"
 						placeholder="nombre@dominio.com">
 
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
 						<div>
 							<label class="label">Teléfono</label> <input id="telefono"
 								class="input" placeholder="9 dígitos">
@@ -99,9 +99,9 @@
 				</div>
 
 				<div
-					class="bg-white rounded-2xl shadow p-5 md:col-span-2 border border-slate-200">
+					class="bg-white rounded-2xl shadow p-5 lg:col-span-2 border border-slate-200">
 					<div
-						class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+						class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 						<div>
 							<h2 class="text-lg font-bold text-slate-900">Inicializar
 								base de datos</h2>
@@ -126,7 +126,7 @@
 			<div
 				class="bg-white rounded-3xl shadow p-6 mb-6 border-l-4 border-l-indigo-500">
 				<div
-					class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+					class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 					<div>
 						<p class="text-indigo-600 font-semibold text-sm">Panel de
 							cliente</p>
@@ -145,7 +145,7 @@
 				<div
 					class="bg-white rounded-2xl shadow p-6 lg:col-span-2 border-t-4 border-t-blue-500">
 					<div
-						class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+						class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
 						<div>
 							<h2 class="text-xl font-bold text-slate-900">Catálogo
 								disponible</h2>
@@ -157,7 +157,7 @@
 					</div>
 					<!-- Este div se rellena dinamicamente con las tarjetas de vehiculos -->
 					<div id="resultado-vehiculos" style="display: none"
-						class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+						class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
 				</div>
 
 				<!-- Formulario para crear un alquiler nuevo -->
@@ -185,7 +185,7 @@
 				<div
 					class="bg-white rounded-2xl shadow p-6 lg:col-span-3 border-t-4 border-t-indigo-500">
 					<div
-						class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+						class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
 						<div>
 							<h2 class="text-xl font-bold text-slate-900">Mis alquileres</h2>
 							<p class="text-slate-500 text-sm">Revisa tus alquileres
@@ -196,7 +196,7 @@
 					</div>
 					<!-- Este div se rellena dinamicamente con las tarjetas de alquileres -->
 					<div id="resultado-misalquileres" style="display: none"
-						class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+						class="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 				</div>
 
 			</div>
@@ -207,7 +207,7 @@
 	<script>
 
 		document.querySelectorAll(".input").forEach(input => {
-			input.className = "w-full border border-slate-300 rounded-xl px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white";
+			input.className = "w-full border border-slate-300 rounded-xl px-4 py-2 mb-3 bg-white";
 		});
 
 		document.querySelectorAll(".label").forEach(label => {
@@ -223,7 +223,7 @@
 		});
 
 		document.querySelectorAll(".mensaje").forEach(caja => {
-			caja.className = "bg-slate-100 border border-slate-200 text-slate-700 p-3 rounded-xl text-sm whitespace-pre-wrap";
+			caja.className = "bg-slate-100 border border-slate-200 text-slate-700 p-3 rounded-xl text-sm";
 		});
 
 		// URL base del servidor Spring Boot — igual que en el ClienteConsola.
@@ -294,7 +294,7 @@
 			}
 
 			pedir(URL_BASE + "/clientes/dni/" + dni, function(cliente) {
-				if (!cliente || !cliente.id) {
+				if (!cliente || !cliente.idCliente) {
 					mostrarTexto("resultado-login", "No existe ninguna cuenta con ese DNI.");
 					return;
 				}
@@ -303,7 +303,7 @@
 		}
 
 		// Guarda el cliente en clienteActual, oculta la zona de login,
-		// muestra la zona de gestiones, escribe el saludo con el nombre del cliente
+		// muestra la zona de gestiones, escribe el saludo con el nombre del cliente, su DNI
 		// y carga automaticamente el catalogo de vehiculos disponibles.
 		
 		function entrarAlPanel(cliente) {
@@ -374,12 +374,12 @@
 				+ "&telefono=" + telefono
 				+ "&DNI=" + dni;
 
-			pedir(url, function(datos) {
+			pedir(encodeURI(url), function(datos) {
 				if (typeof datos === "string" && datos.includes("añadido")) {
 					// Cliente creado — lo buscamos por DNI para obtener su id
 					// y entrar directamente al panel sin paso de login extra.
 					pedir(URL_BASE + "/clientes/dni/" + dni, function(cliente) {
-						if (cliente && cliente.id) {
+						if (cliente && cliente.idCliente) {
 							entrarAlPanel(cliente);
 						} else {
 							mostrarTexto("resultado-registro", "Error: no se pudo cargar la cuenta. Inténtalo de nuevo.");
@@ -406,7 +406,7 @@
 				return;
 			}
 
-			caja.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
+			caja.className = "grid grid-cols-1 lg:grid-cols-2 gap-4";
 
 			vehiculos.forEach(v => {
 				const div = document.createElement("div");
@@ -435,7 +435,7 @@
 		}
 
 		// Coge el ID del vehiculo y las fechas del formulario.
-		// El idCliente viene de clienteActual.id — el usuario no lo escribe,
+		// El idCliente viene de clienteActual.idCliente — el usuario no lo escribe,
 		// lo tiene guardado la app desde que inicio sesion.
 		// encodeURI() codifica los caracteres especiales de la URL (como las fechas).
 		// Despues de crear el alquiler refresca el catalogo para que
@@ -452,7 +452,7 @@
 			}
 
 			const url = URL_BASE + "/alquileres/crear"
-				+ "?idCliente=" + clienteActual.id
+				+ "?idCliente=" + clienteActual.idCliente
 				+ "&idVehiculo=" + idVehiculo
 				+ "&fechaInicio=" + fechaInicio
 				+ "&fechaDevolucion=" + fechaDevolucion;
@@ -479,7 +479,7 @@
 				return;
 			}
 
-			caja.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4";
+			caja.className = "grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 gap-4";
 
 			alquileres.forEach(a => {
 				const div = document.createElement("div");
@@ -507,7 +507,7 @@
 		// y pasa los datos a mostrarAlquileres().
 		
 		function verMisAlquileres() {
-			pedir(URL_BASE + "/clientes/" + clienteActual.id + "/alquileres", function(datos) {
+			pedir(URL_BASE + "/clientes/" + clienteActual.idCliente + "/alquileres", function(datos) {
 				mostrarAlquileres(datos);
 			});
 		}

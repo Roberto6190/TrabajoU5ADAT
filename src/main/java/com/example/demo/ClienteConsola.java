@@ -126,7 +126,7 @@ public class ClienteConsola {
 				for (int i = 0; i < tipos.length; i++) {
 					System.out.println((i + 1) + ". " + tipos[i]);
 				}
-				System.out.println("Introduce el número del tipo: ");
+				System.out.print("\nIntroduce el número del tipo: ");
 
 				if (!in.hasNextInt()) {
 					in.nextLine();
@@ -274,6 +274,7 @@ public class ClienteConsola {
 		System.out.println("3. Buscar alquiler por ID.");
 		System.out.println("4. Ver alquileres de un cliente.");
 		System.out.println("5. Ver alquileres de un vehiculo.");
+		System.out.println("6. Devolver vehiculo.");
 		System.out.print("Elige una opcion: ");
 		opcion = in.nextInt();
 		in.nextLine();
@@ -308,6 +309,16 @@ public class ClienteConsola {
 			long idVehiculo = leerLong("ID del vehiculo: ");
 			jsonAlquileres = get(BASE + "/vehiculos/" + idVehiculo + "/alquileres");
 			listarAlquileres(jsonAlquileres);
+			break;
+		case 6:
+			long idAlquiler = leerLong("ID del alquiler a devolver: ");
+			long dias = leerLong("Numero de dias: ");
+
+			AlquilerVehiculo alquiler = om.readValue(get(BASE + "/alquileres/" + idAlquiler), AlquilerVehiculo.class);
+			Vehiculo vehiculo = om.readValue(get(BASE + "/vehiculos/" + alquiler.getIdVehiculo()), Vehiculo.class);
+
+			double costeCalculado = dias * vehiculo.getPrecio_dia();
+			System.out.println(get(BASE + "/alquileres/devolver/" + idAlquiler + "?costeTotal=" + costeCalculado));
 			break;
 
 		default:
